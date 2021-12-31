@@ -2,6 +2,7 @@
 
 directory="/etc/"
 old_log="./checketc_old.tmp"
+touch old_log
 function check_modify {
 	printf "//////////////// Modified Files ////////////////\n"
 	local found=0
@@ -16,10 +17,10 @@ function check_modify {
 }
 
 function contain {
-	local a b=$1
+	local a b="$1"
 	shift
 	for a; do
-		[[ $a == $b ]] && return 1
+		[[ "$a" == "$b" ]] && return 1
 
 	done
 	return 0
@@ -30,15 +31,20 @@ shopt -s nullglob
 function check_create_delete {
 	local curfiles=(${directory}*) deleted=() oldfiles
 	mapfile -t oldfiles <$old_log
-	local diff=$(echo ${curfiles[@]} ${oldfiles[@]} | tr ' ' '\n' | sort | uniq -u)
-	local found_create=0 found_delete=0 new_file del_file
+
+	diff_=("${curfiles[@]}" "${oldfiles[@]}")
+	readarray -t diff < <(printf "%s\n" "${diff_[@]}" | sort | uniq -u)
+	printf "%s\n" "${diff[@]}"
+
+	local found_create=0 found_delete=0 is_new is_old
+
 	printf "\n//////////////// Created Files ////////////////\n"
-	for file in ${diff[@]}; do
-		contain $file "${curfiles[@]}"
-		new_file=$?
-		contain $file "${oldfiles[@]}"
-		del_file=$?
-		if [[ $new_file -eq 1 ]]; then
+	for file in "${diff[@]}"; do
+		contain "$file" "${curfiles[@]}"
+		is_new=$?
+		contain "$file" "${oldfiles[@]}"
+		is_old=$?
+		if [[ $is_new -eq 1 ]]; then
 			found_create=1
 			if [[ ${file: -4} == '.txt' ]]; then
 				printf "\n$file\n---------BEGIN FILE CONTENT---------\n"
@@ -50,7 +56,7 @@ function check_create_delete {
 				stat "$file" | head -c -1
 				printf "\n---------END FILE INFOMATION---------\n\n"
 			fi
-		elif [[ $del_file -eq 1 ]]; then
+		elif [[ $is_old -eq 1 ]]; then
 			found_delete=1
 			deleted+=("${file}")
 		fi
@@ -60,9 +66,8 @@ function check_create_delete {
 	fi
 
 	printf "\n//////////////// Deleted Files ////////////////\n"
-
 	if [[ $found_delete -eq 1 ]]; then
-		for file in ${deleted[@]}; do
+		for file in "${deleted[@]}"; do
 			printf "$file\n"
 		done
 	else
@@ -75,12 +80,3 @@ echo $(date)
 check_modify
 check_create_delete
 printf "\n\n\n"
-sendmail root@localhost /var/log/checketc.log
-# count=0
-# while [[ 1 ]]; do
-# 	((count = count + 1))
-# 	printf "\n\n\n\nCheck: ${count}" >>$log
-# 	check_modify >>$log
-# 	check_create_delete >>$log
-# 	sleep 5
-# done
