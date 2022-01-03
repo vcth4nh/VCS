@@ -6,24 +6,21 @@
 
 char *groupNameFromUId(char *user_name, gid_t user_gid) {
     struct group *grp;
-    char *all_group = "";
+    char *all_group = NULL;
     char *tmp = getgrgid(user_gid)->gr_name;
-    strcpy(all_group, tmp);
-    while (((grp = getgrent()))) {
-//		printf("group: %s\n", grp->gr_name);
-        char *found_name = "";
+    all_group = tmp;
+    while ((grp = getgrent())) {
+        char *found_name = NULL;
         char **gr_uname = grp->gr_mem;
-        // printf("mem: %s, ", *gr_uname);
         for (gr_uname; *gr_uname != NULL; gr_uname++) {
             if (!strcmp(*gr_uname, user_name)) {
-                strcpy(found_name, *gr_uname);
+                found_name = grp->gr_name;
                 break;
             }
-
         }
-        if (found_name && found_name[0] == '\0') {
-            strcat(all_group, found_name);
+        if (found_name && found_name[0] != '\0') {
             strcat(all_group, "; ");
+            strcat(all_group, found_name);
         }
     }
     endgrent();
@@ -53,18 +50,19 @@ int main(void) {
 #endif
 
     struct passwd *pwd;
-    struct group *grp;
     uid_t user_id;
 
     printf("User id: ");
     scanf("%d", &user_id);
 
     pwd = getpwuid(user_id);
-
-    printf("-------------Result-------------\n");
-    printf("User id: %d\n", pwd->pw_uid);
-    printf("User name: %s\n", pwd->pw_name);
-    printf("Home folder: %s\n", pwd->pw_dir);
-    printf("User's group: %s\n", groupNameFromUId(pwd->pw_name, pwd->pw_gid));
-    return 1;
+    if (!pwd) {
+        printf("No user with id %d",user_id);
+    } else {
+        printf("-------------Result-------------\n");
+        printf("User id: %d\n", pwd->pw_uid);
+        printf("User name: %s\n", pwd->pw_name);
+        printf("Home folder: %s\n", pwd->pw_dir);
+        printf("User's group: %s\n", groupNameFromUId(pwd->pw_name, pwd->pw_gid));
+    }
 }

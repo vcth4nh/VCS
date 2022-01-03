@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.21)
-project(chall2 C)
+cmake_minimum_required(VERSION 3.20)
+project(my_project)
+set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_C_STANDARD 11)
+set(SOURCE_FILES mypasswd.c)
 
-add_executable(chall2
-        getuser.c)
+# Add executable target with source files listed in SOURCE_FILES variable
+add_executable(my_project  ${SOURCE_FILES})

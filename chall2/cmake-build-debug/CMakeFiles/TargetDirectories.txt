@@ -1,3 +1,0 @@
-/media/vcth4nh/Data/VCS/chall2/cmake-build-debug/CMakeFiles/edit_cache.dir
-/media/vcth4nh/Data/VCS/chall2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/media/vcth4nh/Data/VCS/chall2/cmake-build-debug/CMakeFiles/chall2.dir
