@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+
+
 delim="\n\n------------------------------------------\n\n"
 
 echo "" >info.log
@@ -33,7 +36,7 @@ open_port=$(ss -tuln | awk '/LISTEN/ {print $5}' | awk -F ':' '{print $NF}' | so
 printf "9. Currently opening port: $open_port$delim" >>info.log
 
 writeable_folder=$(find / ! -type d -writable)
-printf "10. Writeable folder for other user: $writeable_folder$delim" >>info.log
+printf "10. Writeable folder for other user: $writeable_folder$delim" 
 
 installed_pack=$(dpkg-query -W -f 'Packages name: ${package}\nVersion: ${version}\n-----------\n')
 printf "11. Installed packages:\n$installed_pack$delim" >>info.log
