@@ -80,6 +80,7 @@ int main(void) {
         printf("Enter new password: ");
         scanf("%s", new_passwd);
         char salt[] = "$6$";
+        strcat(salt, ran_salt());
         char *new_hashed_passwd = crypt(new_passwd, salt);
         spwd->sp_pwdp = new_hashed_passwd;
         printf("New spwd: %s\n\n\n", spwd->sp_pwdp);
