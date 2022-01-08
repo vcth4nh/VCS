@@ -3,7 +3,6 @@
 #include <pwd.h>
 #include <grp.h>
 #include <string.h>
-
 #include <malloc.h>
 
 char *groupNameFromUId(char *user_name, gid_t user_gid) {

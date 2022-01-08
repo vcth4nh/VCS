@@ -21,7 +21,7 @@ int main(void) {
     struct passwd *passwd = getpwuid(getuid());
     if (!passwd) {
         printf("Can't retrieve passwd information");
-        return -1;
+        return 1;
     }
 
     char *user_name = passwd->pw_name;
@@ -29,17 +29,25 @@ int main(void) {
 
     FILE *shadow_tmp = fopen(SHADOW_TMP, "w");
     if (!shadow_tmp) {
-        printf("Can't access shadow file\n");
-        return -1;
+        printf("Can't access create %s\n", SHADOW_TMP);
+        return 1;
     }
 
     int success = replace_shadow(user_name, shadow_tmp);
     fclose(shadow_tmp);
 
-    if (success)
+
+    if (success) {
+        // replace original shadow file by new shadow file
+        remove(SHADOW);
+        rename(SHADOW_TMP, SHADOW);
         printf("\n----Done----\n");
-    else
+    } else {
+        //remove tmp file
+        remove(SHADOW_TMP);
+        printf("Unable to change the password\n");
         printf("\n----Failed----\n");
+    }
 }
 
 
@@ -66,29 +74,21 @@ int replace_shadow(char *user_name, FILE *shadow_tmp) {
 
     // copy line-by-line from shadow to temp shadow file
     while ((spwd = getspent())) {
+        //check if this is the desired username
         if (strcmp(spwd->sp_namp, user_name) == 0) {
             if (!check_passwd(spwd->sp_pwdp)) {
                 printf("Wrong password\n");
-                return success;
+                return 0;
             }
             replace_sp_pwdp(spwd);
             putspent(spwd, shadow_tmp);
-            success=1;
+            success = 1;
         } else {
             putspent(spwd, shadow_tmp);
         }
     }
     endspent();
 
-    if (!success){
-        remove(SHADOW_TMP);
-        printf("Unable to change the password\n");
-        return success;
-    }
-
-    // replace original shadow file by new shadow file
-    remove(SHADOW);
-    rename(SHADOW_TMP, SHADOW);
     return success;
 }
 
