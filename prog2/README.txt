@@ -1,0 +1,1 @@
+file compile_mypassword.sh để compile mypassword.c & setuid để chạy bằng root
