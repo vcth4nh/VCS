@@ -1,0 +1,4 @@
+read(0, "halo\n", 1024)                 = 5
+openat(AT_FDCWD, "/tmp/test.txt", O_WRONLY|O_CREAT|O_APPEND, 0666) = -1 EACCES (Permission denied)
+--- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=0xc0} ---
++++ killed by SIGSEGV (core dumped) +++
