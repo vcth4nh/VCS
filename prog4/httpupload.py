@@ -7,12 +7,6 @@ PATH_UPLOAD = "/wp-admin/async-upload.php"
 PATH_ADMIN = "/wp-admin/admin-ajax.php"
 
 
-def failed() -> None:
-    import sys
-    print("Upload failed")
-    sys.exit(-1)
-
-
 class Gen:
     @staticmethod
     def boundary() -> str:
@@ -181,7 +175,7 @@ def upload() -> str or None:
     Process to upload image
     :return: uploaded image's url
     """
-    cookie = login()
+    cookie = login()[0]
     if not cookie:
         return None
 
@@ -218,8 +212,9 @@ def upload() -> str or None:
 def main():
     url = upload()
     if not url:
-        failed()
-    print(f"Upload success. File upload url:\n{url}")
+        print("Upload failed")
+    else:
+        print(f"Upload success. File upload url:\n{url}")
 
 
 if __name__ == '__main__':

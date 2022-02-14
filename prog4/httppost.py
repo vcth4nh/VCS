@@ -5,12 +5,6 @@ PORT = 80
 PATH = "/wp-login.php"
 
 
-def failed():
-    import sys
-    print("User test đăng nhập thất bại")
-    sys.exit(-1)
-
-
 class Cred:
     """Object that holds username and password"""
 
@@ -62,17 +56,17 @@ def login() -> str or None:
     cookie = redirect(header_recv)
 
     if cookie and "wordpress_logged_in_" in cookie:
-        return cookie
+        return cookie, credential.user
 
-    return None
+    return None, None
 
 
 def main():
-    check = login()
+    check, user = login()
     if check is None:
-        failed()
-
-    print("User test đăng nhập thành công")
+        print(f"User {user} đăng nhập thất bại")
+    else:
+        print(f"User {user} đăng nhập thành công")
 
 
 if __name__ == '__main__':
