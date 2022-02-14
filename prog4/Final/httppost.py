@@ -58,7 +58,7 @@ def login() -> str or None:
     if cookie and "wordpress_logged_in_" in cookie:
         return cookie, credential.user
 
-    return None, None
+    return None, credential.user
 
 
 def main():
