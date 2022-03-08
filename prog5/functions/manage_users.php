@@ -111,7 +111,7 @@ function list_users($option, $student_id = null)
  */
 function table_cell($res_row, $action, $field): string
 {
-    $value = htmlspecialchars($res_row["$field"], ENT_QUOTES);
+    $value = xss($res_row["$field"]);
     if ($action === UPDATE) {
         if ($_SESSION['role'] === STUDENT and ($field !== 'fullname' and $field !== 'username'))
             return "<td><input name='$field' type='text' placeholder='$value' value='$value' form='form_{$res_row['uid']}'></td>";

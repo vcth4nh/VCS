@@ -91,6 +91,11 @@ function is_teacher()
         header('Location: ./student.php');
 }
 
+function xss($string): string
+{
+    return htmlspecialchars($string);
+}
+
 
 $Broadcast = array(
     'AUTH_EMPTY' => 'Tài khoản hoặc mật khẩu trống',

@@ -63,7 +63,7 @@ set_session_info();
             <button type="submit" name="logout" value="logout">Đăng xuất</button>
         </form>
     </li>
-    <li class="right"><p>Chào <?php echo $_SESSION['fullname'] ?></p></li>
+    <li class="right"><p>Chào <?= xss($_SESSION['fullname']) ?></p></li>
 </ul>
 
 <div class="full-width-container row">

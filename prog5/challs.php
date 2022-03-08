@@ -54,15 +54,15 @@ if (isset($_POST['upload_ans'])) {
             <button type="submit" name="logout" value="logout">Đăng xuất</button>
         </form>
     </li>
-    <li class="right"><p>Chào <?php echo $_SESSION['fullname'] ?></p></li>
+    <li class="right"><p>Chào <?= xss($_SESSION['fullname']) ?></p></li>
 </ul>
 
 <!-- Thông báo câu trả lời của người dùng đúng hay sai -->
 <?php
 if (isset($file_location)) {
     if (!isset($file_content))
-        echo "<p class='error'>Trả lời câu {$_POST['i']} sai</p>";
-    else echo "<p class='success'>Trả lời câu {$_POST['i']} đúng</p>";
+        echo "<p class='error'>Trả lời câu " . xss($_POST['i']) . " sai</p>";
+    else echo "<p class='success'>Trả lời câu " . xss($_POST['i']) . " đúng</p>";
 }
 ?>
 
@@ -96,7 +96,7 @@ $i = 1;
     <hr>
     <h4>Challenge <?= $i; ?>:</h4>
     <label>
-        <span><?= $row['hint'] ?></span><br>
+        <span><?= xss($row['hint']) ?></span><br>
         <span class="small-font">Đăng lúc <?= date_format(date_create($row['post_time']), 'G:i \n\g\à\y d/m/Y'); ?></span>
         <?php if (empty($file_content) || $chall_id != $row['chall_id']): ?>
             <form action="" method="post">
@@ -106,7 +106,7 @@ $i = 1;
                 <button type="submit" name="upload_ans" value="upload_ans" class="small-btn">Gửi</button>
             </form>
         <?php else: ?>
-            <p id="here" class="success chall-content"><?= $file_content ?></p>
+            <pre id="here" class="success chall-content"><?= xss($file_content) ?></pre>
         <?php endif; ?>
     </label>
 

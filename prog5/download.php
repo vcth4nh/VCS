@@ -17,10 +17,9 @@ if (!empty($_GET['file']) and !empty($_GET['folder'])) {
     if ($file_original->num_rows === 1) {
         $file_original = $file_original->fetch_assoc()['original_name'];
         $location = $folder . $location;
+        if (!file_exists($location)) die("KHÔNG TỒN TẠI FILE");
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($finfo, $location);
-        print_r($file_original);
-        print_r($location);
         header('Content-Description: File Transfer');
         header('Content-Type: ' . $mime_type);
         header("Content-Disposition: attachment; filename*=UTF-8''" . rawurlencode($file_original));
@@ -31,6 +30,6 @@ if (!empty($_GET['file']) and !empty($_GET['folder'])) {
         header('Content-Length: ' . filesize($location));
         readfile($location);
         exit();
-    }
+    } else die('FATAL');
 
 }

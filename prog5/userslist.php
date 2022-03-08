@@ -5,7 +5,7 @@ require_once 'functions/manage_users.php';
 start_session();
 check_login();
 
-// Xử lí yêu cầu gửi tin nhắn
+// Xử lí yêu cầu gửi và sửa tin nhắn
 if (!empty($_POST['recv_id']) && !empty($_POST['send_msg'])) {
     global $msg, $not_exist;
     $msg = validate(($_POST['send_msg']));
@@ -31,18 +31,18 @@ if (!empty($_POST['view_history']) && !empty($_POST['recv_id'])) {
         $result = db_query(SqlQuery::msg_history($send_id, $recv_id));
         if ($result->num_rows > 0) {
             $empty_history = false;
-            foreach ($result as $row) {
+            foreach ($result as $res_row) {
                 $msg_history .= "<div class='full-width-container'>\n";
                 $msg_history .= "<hr>";
-                $msg_history .= "<h4>Gửi lúc {$row['recv_time']}</h4>\n";
-                $text = htmlspecialchars($row['text'], ENT_QUOTES);
+                $msg_history .= "<h4>Gửi lúc {$res_row['recv_time']}</h4>\n";
+                $text = xss($res_row['text']);
                 $msg_history .= "<form method='post' action=''>\n" .
                     "<textarea name='send_msg' spellcheck='false'>$text</textarea><br>\n" .
                     "<input type='hidden' name='recv_id' value='$recv_id'>\n" .
-                    "<button type='submit' class='small-btn' name='msg_id' value='{$row['msg_id']}'>Gửi</button>\n" .
+                    "<button type='submit' class='small-btn' name='msg_id' value='{$res_row['msg_id']}'>Gửi</button>\n" .
                     "<button type='submit' class='small-btn delete' name='delete_msg' value='delete_msg' form='delete-msg'>Xóa</button>" .
                     "</form>\n" .
-                    "<input type='hidden' name='msg_id' value='{$row['msg_id']}' form='delete-msg'>" .
+                    "<input type='hidden' name='msg_id' value='{$res_row['msg_id']}' form='delete-msg'>" .
                     "<form id='delete-msg' action='' method='post'></form>";
                 $msg_history .= "</div>\n";
             }
@@ -97,7 +97,7 @@ set_session_info();
             <button type="submit" name="logout" value="logout">Đăng xuất</button>
         </form>
     </li>
-    <li class="right"><p>Chào <?php echo $_SESSION['fullname'] ?></p></li>
+    <li class="right"><p>Chào <?= xss($_SESSION['fullname']) ?></p></li>
 </ul>
 
 <p><?php msg_result() ?></p>

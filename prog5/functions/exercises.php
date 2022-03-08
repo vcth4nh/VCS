@@ -46,7 +46,7 @@ function display_exer($role)
  */
 function exer_row($res_row): string
 {
-    $file_name = htmlspecialchars($res_row['original_name']);
+    $file_name = xss($res_row['original_name']);
     $tb_row = "<tr id='{$res_row['exer_id']}'>";
     $tb_row .= "<td><div class='td-file-name'>$file_name</div></td>\n";
     $tb_row .= "<td class='center'>" . date_format(date_create($res_row['post_time']), 'G:i d/m/Y') . "</td>\n";
@@ -141,8 +141,8 @@ function show_submitted_table($exer_id)
             echo "<tr id='{$row['sub_id']}'>";
             $fullname = db_query(SqlQuery::info_from_uid($row['uid']));
             if ($fullname->num_rows !== 1)
-                die("FATAL");
-            echo "<td>" . $fullname->fetch_assoc()['fullname'] . "</td>";
+                die("HỌC SINH KHÔNG TỒN TẠI");
+            echo "<td>" . xss($fullname->fetch_assoc()['fullname']) . "</td>";
             echo "<td>" . date_format(date_create($row['post_time']), 'G:i d/m/Y') . "</td>";
             echo download_link($row['location'], SUBMIT);
         }

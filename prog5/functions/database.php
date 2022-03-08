@@ -8,9 +8,15 @@
 function db_conn(): mysqli
 {
     $servername = 'localhost';
-    $username = 'vcth4nh';
-    $password = 'vcth4nh';
-    $db = 'prog5';
+//    $username = 'vcth4nh';
+//    $password = 'vcth4nh';
+//    $db = 'prog5';
+
+//  DB trên www.000webhost.com
+    $username = 'id18462295_vcth4nh';
+    $password = 'id18462295_Vcth4nh';
+    $db = 'id18462295_prog5';
+
     $try = 0;
     do {
         $conn = new mysqli($servername, $username, $password, $db);

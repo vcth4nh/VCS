@@ -106,7 +106,7 @@ class POST
             return check_password($uid, $password);
         elseif ($option === PLAIN)
             return $password;
-        else die("FATAL password");
+        else die("FATAL");
     }
 
     /**
