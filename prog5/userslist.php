@@ -11,10 +11,13 @@ if (!empty($_POST['recv_id']) && !empty($_POST['send_msg'])) {
     $msg = validate(($_POST['send_msg']));
     $send_id = $_SESSION['uid'];
     $recv_id = POST::uid('recv_id');
+    $msg_id = POST::msg_id();
     global $dbOK;
     $dbOK = false;
     if ($recv_id !== $send_id && $not_exist !== true) {
-        $dbOK = db_query(SqlQuery::send_msg($send_id, $recv_id, $msg));
+        if ($msg_id === null)
+            $dbOK = db_query(SqlQuery::send_msg($send_id, $recv_id, $msg));
+        else $dbOK = db_query(SqlQuery::edit_msg($msg_id, $msg));
     }
 }
 
@@ -36,7 +39,7 @@ if (!empty($_POST['view_history']) && !empty($_POST['recv_id'])) {
                 $msg_history .= "<form method='post' action=''>\n" .
                     "<textarea name='send_msg' spellcheck='false'>$text</textarea><br>\n" .
                     "<input type='hidden' name='recv_id' value='$recv_id'>\n" .
-                    "<button type='submit' class='small-btn'>Gửi</button>\n" .
+                    "<button type='submit' class='small-btn' name='msg_id' value='{$row['msg_id']}'>Gửi</button>\n" .
                     "<button type='submit' class='small-btn delete' name='delete_msg' value='delete_msg' form='delete-msg'>Xóa</button>" .
                     "</form>\n" .
                     "<input type='hidden' name='msg_id' value='{$row['msg_id']}' form='delete-msg'>" .

@@ -68,13 +68,16 @@ function list_users($option, $student_id = null)
                 case UPDATE:
                     $form_arr[] = prepare_form('form_' . $res_row['uid']);
                     echo table_cell($res_row, $action, "username") . "\n";
-                    if ($_SESSION['role'] === TEACHER)
+                    if ($_SESSION['role'] === TEACHER) {
                         echo "<td><input name='password' type='password' disabled value='' form='form_{$res_row['uid']}'></td>\n";
-                    else echo "<td><input name='password' type='password' value='' form='form_{$res_row['uid']}'></td>\n";
-                    echo "<td><button id='edit' type='button' onclick='enable_input(\"{$res_row['uid']}\")'>Sửa</button>" .
-                        "<button id='submit-edit' type='hidden' style='display: none' name= 'update_user_info' value='update_user_info' form='form_{$res_row['uid']}'>Gửi</button></td>\n";
-                    if ($_SESSION['role'] === TEACHER)
+                        echo "<td><button id='edit' type='button' onclick='enable_input(\"{$res_row['uid']}\")'>Sửa</button>" .
+                            "<button id='submit-edit' type='hidden' style='display: none' name= 'update_user_info' value='update_user_info' form='form_{$res_row['uid']}'>Gửi</button></td>\n";
                         echo "<td><button type='submit' name= 'delete_user_info' value='delete_user_info' onclick='return cfDel(\"{$res_row['fullname']}\")' form='form_{$res_row['uid']}'>Gửi</button></td>\n";
+
+                    } else {
+                        echo "<td><input name='password' type='password' value='' form='form_{$res_row['uid']}'></td>\n";
+                        echo "<td><button id='submit-edit' type='submit' name= 'update_user_info' value='update_user_info' form='form_{$res_row['uid']}'>Gửi</button></td>\n";
+                    }
                     echo "<td>" . update_result($res_row['uid']) . "</td>\n";
                     break;
                 case MSG:
@@ -110,7 +113,7 @@ function table_cell($res_row, $action, $field): string
 {
     $value = htmlspecialchars($res_row["$field"], ENT_QUOTES);
     if ($action === UPDATE) {
-        if ($_SESSION['role'] === STUDENT and ($field !== 'fullname' or $field !== 'username'))
+        if ($_SESSION['role'] === STUDENT and ($field !== 'fullname' and $field !== 'username'))
             return "<td><input name='$field' type='text' placeholder='$value' value='$value' form='form_{$res_row['uid']}'></td>";
         else return "<td><input name='$field' type='text' disabled placeholder='$value' value='$value' form='form_{$res_row['uid']}'></td>";
     } else return "<td>$value</td>";

@@ -207,6 +207,11 @@ class SqlQuery
                 VALUE($send_id, $recv_id, '$msg')";
     }
 
+    public static function edit_msg($msg_id, $msg): string
+    {
+        return "UPDATE messages SET text='$msg' WHERE msg_id=$msg_id";
+    }
+
     public static function msg_history($send_id, $recv_id): string
     {
         return "SELECT * FROM messages WHERE send_id = $send_id and recv_id = $recv_id";
@@ -273,5 +278,6 @@ class SqlQuery
     }
 
     const get_chall_list = "SELECT * FROM challs";
+
 
 }
