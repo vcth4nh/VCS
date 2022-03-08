@@ -1,0 +1,415 @@
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: large;
+}
+
+input, button {
+    padding: 6px;
+}
+
+button, #upload-avatar, #upload-exer, #upload-chall {
+    color: #694E4E;
+    background-color: #C1A3A3;
+    font-size: large;
+    cursor: pointer;
+}
+
+#upload-chall {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#upload-exer {
+    width: 50%;
+}
+
+textarea {
+    font-size: larger;
+    width: 600px;
+    height: 120px;
+    border: 3px solid #cccccc;
+    padding: 5px;
+    background-position: bottom right;
+    background-repeat: no-repeat;
+}
+
+h2, h4 {
+    margin-bottom: 5px;
+}
+
+.error {
+    margin: 5px;
+    color: #ff4848;
+    font-size: x-large;
+}
+
+.success {
+    color: #47a440;
+    font-size: x-large;
+}
+
+.big-font {
+    font-size: xxx-large;
+}
+
+.page-centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn1 {
+    transition-duration: 0.4s;
+    background-color: #F3C5C5;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+
+.btn-50 {
+    transition-duration: 0.4s;
+    background-color: #F3C5C5;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: 2px solid #F3C5C5;
+    cursor: pointer;
+    width: 49.8%;
+}
+
+
+.btn1:hover, .btn-50:hover {
+    border: 2px solid #F3C5C5;
+    background-color: #ffffff;
+    color: #F3C5C5;
+}
+
+.container {
+    padding: 16px 20px;
+}
+
+.full-width-container {
+    padding: 16px 0;
+    width: 100%;
+}
+
+
+.no-margin-bottom {
+    margin-bottom: 0;
+}
+
+.no-margin-top {
+    margin-top: 0;
+}
+
+/* Bảng chung */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    color: #886F6F;
+}
+
+table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #F3C5C5;
+}
+
+table td, table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table tr {
+    transition-duration: 0.5s;
+}
+
+table tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+table tr:hover {
+    background-color: #cbcbcb;
+}
+
+table input[type=text], table input[type=password] {
+    width: 90%;
+}
+
+table button {
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+    background-color: #ededee;
+    border: none;
+    font-size: medium;
+    display: block;
+    padding: 10px 16px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+table .delete {
+    color: white;
+    background-color: red;
+}
+
+.small-cell {
+    width: 20px;
+    background-color: white;
+}
+
+.blue {
+    background-color: #F3C5C5;
+}
+
+
+/* Thành naviage */
+.nav-bar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #694E4E;
+}
+
+.nav-bar li {
+    float: left;
+}
+
+.nav-bar .right {
+    float: right;
+}
+
+.nav-bar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition-duration: 0.5s;
+}
+
+.nav-bar li a:hover:not(.active) {
+    background-color: #C1A3A3;
+}
+
+.nav-bar button {
+    color: white;
+    background-color: #694E4E;
+    padding: 12px 12px;
+    border: none;
+    border-left: 4px solid #C1A3A3;
+    border-bottom: 4px solid #C1A3A3;
+    border-bottom-left-radius: 10px;
+    font-size: large;
+    transition-duration: 0.5s;
+}
+
+.nav-bar button:hover {
+    background-color: #C1A3A3;
+}
+
+.nav-bar li p {
+    display: block;
+    color: white;
+    text-align: center;
+    margin: 14px 10px;
+}
+
+.nav-bar .active {
+    background-color: #C1A3A3;
+}
+
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    object-position: 100% 0;
+}
+
+.small-btn {
+    transition-duration: 0.4s;
+    font-weight: bold;
+    background-color: #F3C5C5;
+    padding: 10px 15px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+}
+
+
+/* Chia page thành 2 cột */
+.row .column {
+    float: left;
+    padding: 10px;
+    margin: auto;
+}
+
+.row .left {
+    width: 49%;
+}
+
+.row .right {
+    width: 47%;
+}
+
+
+.row:before {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.row {
+    box-sizing: border-box;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Messaging */
+.msg-box {
+    height: 538px;
+    padding: 10px;
+    border: 5px solid gray;
+    overflow: auto;
+}
+
+.msg-box-long {
+    height: 638px;
+}
+
+#handle-msg {
+    display: none;
+}
+
+
+/* Exercises */
+.box-exer {
+    max-height: 330px;
+    overflow-y: auto;
+}
+
+
+#table-exer .center {
+    text-align: center;
+}
+
+#table-exer input[type="file"] {
+    display: none;
+}
+
+#table-exer label {
+    float: left;
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    margin: 12px 1px;
+    cursor: pointer;
+}
+
+#table-exer button {
+    float: right;
+    background-color: #F3C5C5;
+    transition-duration: 0.4s;
+    font-weight: bold;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    border: 1px solid #F3C5C5;
+    padding: 10px 15px;
+    margin: 12px 1px;
+    cursor: pointer;
+}
+
+
+#table-exer td .td-file-name {
+    word-wrap: anywhere;
+}
+
+#table-exer .file-name {
+    max-width: 40%;
+}
+
+#table-exer .upload-time {
+    width: 20%;
+}
+
+#table-exer .download {
+    width: 10%;
+}
+
+#table-exer .upload {
+    max-width: 30%;
+}
+
+/*Iframe style*/
+#submitted-list {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    cursor: pointer;
+}
+
+#submitted-list .popup {
+    background-color: #fefefe;
+    height: 50%;
+    width: 50%;
+}
+
+#submitted-list iframe {
+    border: none;
+    height: 100%;
+    width: 100%;
+}
+
+
+.close-submitted {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: #000000;
+    font-size: 35px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.close-submitted:hover, .close:focus {
+    color: #C1A3A3;
+    cursor: pointer;
+}
+
+.long-input {
+    width: 300px;
+}
+
+.chall-content {
+    border: #886F6F solid 3px;
+    padding: 10px;
+    max-width: 500px;
+    border-radius: 10px;
+    word-wrap: anywhere;
+}

@@ -1,7 +1,10 @@
 <?php
-require_once "config.php";
+require_once "functions/misc.php";
 start_session();
 if (isset($_POST["logout"])) {
     session_destroy();
-    header('Location: ./index.php');
-} else check_session();
+    header('Location: ./login.php');
+} else {
+    check_login();
+    check_role();
+}

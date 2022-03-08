@@ -1,130 +1,28 @@
 <?php
-require_once "config.php";
+require_once "functions/misc.php";
+require_once "functions/manage_users.php";
+require_once "functions/received_msg.php";
+require_once "functions/upload.php";
+require_once "functions/exercises.php";
+
 start_session();
-//is_teacher();
-function table_cell($row, $field): string
-{
-    $value = htmlspecialchars($row["$field"], ENT_QUOTES);
-    return "<td><input name='$field' type='text' placeholder='$value' value='$value' form='form_{$row['id']}'></td>";
+is_teacher();
+
+// Xử lí yêu cầu cập nhật thông tin người dùng
+if (isset($_POST['uid']))
+    manage_user();
+
+// Xử lí yêu cầu đăng bài tập mới
+if (isset($_POST['upload_exer']) and $_SESSION['role'] === TEACHER) {
+    upload_exer(EXERCISE_FOLDER);
 }
 
-function prepare_form($form_id): string
-{
-    return "<form method='POST' action='./teacher.php' id='form_$form_id'></form>";
+// Xử lí yêu cầu xóa bài tập
+if (isset($_POST['delete_exer']) and $_SESSION['role'] === TEACHER) {
+    delete_exer();
 }
 
-function export_form()
-{
-    global $form_arr;
-    foreach ($form_arr as $form) {
-        echo $form . "\n";
-    }
-}
-
-function get_stu_info()
-{
-    $conn = db_conn();
-    $sql = SqlQuery::get_student_list();
-    $result = $conn->query($sql);
-    if (!$result) return;
-
-    $result = $result->fetch_all(MYSQLI_ASSOC);
-    if (count($result) > 0) {
-        global $form_arr;
-        $form_arr = array();
-        echo "<table id='student_list'>\n";
-        echo "<tr><th>Full Name</th><th>Phone number</th><th>Email</th><th>Username</th><th>Password</th><th>Edit</th><th></th></tr>\n";
-        foreach ($result as $row) {
-            $form_arr[] = prepare_form($row['id']);
-            echo "<tr id='{$row['id']}'>\n";
-            echo "<input name='id' type='hidden' value='{$row['id']}' form='form_{$row['id']}'>\n";
-            echo table_cell($row, 'fullname') . "\n";
-            echo table_cell($row, "phone") . "\n";
-            echo table_cell($row, "email") . "\n";
-            echo table_cell($row, "username") . "\n";
-            echo "<td><input name='password' type='text' value='' form='form_{$row['id']}'></td>\n";
-            echo "<td><button type='submit' form='form_{$row['id']}'>Submit</button></td>\n";
-            echo "<td>" . db_result($row['id']) . "</td>\n";
-            echo "</form></tr>\n";
-        }
-        echo '</table>';
-    }
-    export_form();
-}
-
-
-function db_result($id)
-{
-    global $ERR, $db;
-    if ($id != $_POST['id']) return '';
-    if (isset($db['success']))
-        if ($db['success'])
-            return "✅";
-        else {
-            return $ERR['QUERY'];
-
-        }
-    return '';
-}
-
-
-if ($_SERVER['REQUEST_METHOD'] === "POST") {
-    var_dump($_POST);
-    $db['success'] = false;
-
-    $id = POST::id();
-    $username = POST::username();
-
-    $fullname = POST::fullname();
-    $phone = POST::phone();
-    $email = POST::email();
-    $password = POST::password($id, HASH);
-
-    if (!isset($validation)) {
-        $conn = db_conn();
-        if ($id === -1 or $id === -2) {
-            $exist = is_exist('', $username, $conn);
-            if ($exist) {
-                $db['duplicated'] = true;
-            } else {
-                if ($id === -2) {
-                    global $added_teacher;
-                    $added_teacher = false;
-                }
-
-                if ($id === -1) $sql = SqlQuery::add_user($fullname, $phone, $email, $username, $password);
-                else $sql = SqlQuery::add_user($fullname, $phone, $email, $username, $password, true);
-
-                $result = $conn->query($sql);
-                if ($result)
-                    $db['success'] = true;
-                if ($id === 1) {
-                    $sql = SqlQuery::id_from_username($username);
-                    $_POST['id'] = $conn->query($sql)->fetch_all()['id'];
-                    echo $_POST['id'];
-                } else {
-                    $added_teacher = true;
-                }
-            }
-        } else {
-            $exist = is_exist($id, $username, $conn);
-            if ($exist === 1)
-                $db['id'] = true;
-            elseif ($exist === 2)
-                $db['duplicated'] = true;
-            else {
-                $sql = SqlQuery::update($id, $fullname, $phone, $email, $username, $password);
-                $result = $conn->query($sql);
-                if ($result)
-                    $db['success'] = true;
-
-            }
-        }
-
-    }
-}
-
-
+set_session_info();
 ?>
 
 <!DOCTYPE html>
@@ -133,29 +31,95 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Welcome teacher</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>$(document).ready(function () {
+            let submittedList = $("#submitted-list")
+            $(".open-submitted").click(function (e) {
+                e.preventDefault();
+                $("#submitted-list iframe").attr("src", $(this).attr('href'));
+                $("#submitted-list").fadeIn('slow');
+            });
+
+            $("#submitted-list .close-submitted").click(function () {
+                $("#submitted-list").fadeOut('slow');
+            });
+            submittedList.click(function () {
+                $("#submitted-list").fadeOut('slow');
+            });
+        });
+    </script>
 </head>
 
 
 <body>
-<h1>Edit student's information</h1>
-<div id="buttons_add_user">
-    <button onclick="add_new_student()">Add new student</button>
-    <button onclick="add_new_teacher()">Add new teacher</button>
-    <br>
-</div>
-<?php show_notice();
-get_stu_info(); ?>
-<!--TODO js form validation-->
+<ul class="nav-bar">
+    <li><a href="teacher.php" class="active">Trang chủ</a></li>
+    <li><a href="userslist.php">Danh sách người dùng</a></li>
+    <li><a href="challs.php">Challenges</a></li>
+    <li class="right">
+        <form action="./logout.php" method="post" class="logout">
+            <button type="submit" name="logout" value="logout">Đăng xuất</button>
+        </form>
+    </li>
+    <li class="right"><p>Chào <?php echo $_SESSION['fullname'] ?></p></li>
+</ul>
 
+<div class="full-width-container row">
+    <div id='exer' class="column left">
+        <h2>Bài tập</h2>
+        <?php exer_noti(); ?>
+        <div class="box-exer">
+            <?php display_exer($_SESSION['role']); ?>
+        </div>
+        <div id="submitted-list">
+            <div class="popup page-centered">
+                <a href="#" class="close-submitted">X</a>
+                <iframe src=""></iframe>
+            </div>
+        </div>
+        <form action="" method="post" enctype="multipart/form-data">
+            <p class="no-margin-bottom"><b>Đăng bài tập mới</b></p>
+            <input type="file" name="file" id="upload-exer">
+            <button type="submit" name="upload_exer" value="upload_exer" class="small-btn">Tải lên</button>
+        </form>
+        <p class="error"><?php upload_noti(EXERCISE_FOLDER) ?></p>
+    </div>
+    <div id="recv-msg" class="msg-box column right">
+        <?php received_msg() ?>
+    </div>
+</div>
+
+<div class="full-width-container">
+    <div id="buttons-add-user">
+        <button class="btn-50" onclick="add_new_student()">Thêm học sinh mới</button>
+        <button class="btn-50" onclick="add_new_teacher()">Thêm giáo viên mới</button>
+        <br>
+    </div>
+</div>
+<div id="list-all-users">
+    <div id="list-and-update-all-student" class="full-width-container">
+        <hr>
+        <h2>Cập nhật thông tin học sinh</h2>
+        <p class="error"><?php display_update_noti(); ?></p>
+        <?php list_users(UPDATE_STUDENT); ?>
+        <!--TODO js form validation-->
+    </div>
+    <div id="list-all-teacher" class="full-width-container">
+        <hr>
+        <h2>Danh sách giáo viên</h2>
+        <?php list_users(DISPLAY_TEACHER); ?>
+    </div>
+</div>
 <script>
-    function delete_button() {
-        document.getElementById("buttons_add_user").remove();
+    function change_button_to_table(table) {
+        document.getElementById("buttons-add-user").replaceWith(table);
     }
 
     function create_form() {
         let form = document.createElement("form");
-        form.setAttribute("method", "POST");
+        form.setAttribute("method", "post");
         form.setAttribute("action", "./teacher.php");
         form.setAttribute("id", "new_form")
         document.getElementsByTagName("body")[0].appendChild(form);
@@ -167,7 +131,7 @@ get_stu_info(); ?>
         if (field === "button") {
             input = document.createElement("button");
             input.setAttribute("type", type);
-            input.innerHTML = "Submit";
+            input.innerHTML = "Gửi";
         } else {
             input = document.createElement("input");
             input.setAttribute("type", type);
@@ -184,7 +148,7 @@ get_stu_info(); ?>
 
         let id = document.createElement("input");
         id.setAttribute("type", "hidden");
-        id.setAttribute("name", "id");
+        id.setAttribute("name", "uid");
         id.setAttribute("value", id_value);
         id.setAttribute("form", "new_form");
         tmp_row.push(id);
@@ -195,21 +159,38 @@ get_stu_info(); ?>
         tmp_row.push(cell("username"));
         tmp_row.push(cell("password", "password"))
         tmp_row.push(cell("button", "submit"));
-        tmp_row.push(document.createElement("td"));
 
         return tmp_row;
     }
 
+
     function add_new_student(id_value = "new_student") {
         create_form()
-        let table = document.getElementById("student_list");
-        let row = table.insertRow(1);
-        row.append(...add_cells(id_value));
-        delete_button();
+        let table = document.createElement("table");
+        table.insertRow().innerHTML = "<th>Họ và tên</th><th>Số điện thoại</th><th>Email</th><th>Tên đăng nhập</th><th>Mật khẩu</th><th>Cập nhật</th>";
+        let new_profile = table.insertRow();
+        new_profile.append(...add_cells(id_value));
+        change_button_to_table(table);
     }
 
     function add_new_teacher() {
         add_new_student("new_teacher")
+    }
+
+    function cfDel(user) {
+        return confirm('Xác nhận xóa ' + user);
+    }
+
+    function enable_input(formID) {
+        let row = document.getElementById(formID);
+        let el = row.querySelectorAll(":scope input[type=text], :scope input[type=password]");
+        console.log(el);
+        for (let i = 0; i < el.length; i++) {
+            console.log(el[i]);
+            el[i].disabled = false;
+        }
+        row.querySelector(':scope #submit-edit').style.display = 'block';
+        row.querySelector(':scope #edit').style.display = 'none';
     }
 </script>
 </body>
