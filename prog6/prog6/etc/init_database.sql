@@ -1,17 +1,21 @@
+DROP DATABASE IF EXISTS prog6;
+CREATE DATABASE IF NOT EXISTS prog6;
+USE prog6;
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users
 (
     uid      INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(15) UNIQUE                                              NOT NULL,
     password VARCHAR(60)                                                     NULL,
-    fullname VARCHAR(100) CHARACTER SET utf8mb4 COLLATE 'utf8mb4_general_ci' NOT NULL,
+    name VARCHAR(100) CHARACTER SET utf8mb4 COLLATE 'utf8mb4_general_ci' NOT NULL,
     email    VARCHAR(320)                                                    NULL,
     phone    VARCHAR(15)                                                     NULL,
     teacher  BIT                                                             NOT NULL,
     avatar   VARCHAR(50)                                                     NULL
 );
 
-INSERT INTO users (username, fullname, teacher)
+INSERT INTO users (username, name, teacher)
 VALUES ('student1', 'student1', false),
        ('student2', 'student2', false),
        ('teacher1', 'teacher1', true),
