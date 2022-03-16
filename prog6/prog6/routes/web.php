@@ -13,12 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth/login');
-});
+require __DIR__ . '/auth.php';
+
+Route::redirect('/', 'login');
 
 Route::middleware('auth')->group(function () {
-
     Route::view('dashboard', 'dashboard')->name('dashboard');
     Route::view('user-list', 'user-list')->name('user-list');
     Route::view('challenges', 'challenges')->name('challenges');
@@ -28,4 +27,3 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 });
 
-require __DIR__ . '/auth.php';

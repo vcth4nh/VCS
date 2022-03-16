@@ -10,4 +10,9 @@ return [
     'role' => 'Chức vụ',
     'teacher' => 'Giáo viên',
     'student' => 'Học sinh',
+    'update' => 'Cập nhật',
+    'edit' => 'Sửa',
+    'delete' => 'Xóa',
+    'send-msg' => 'Nhắn tin',
+    'show-msg' => 'Xem tin nhắn',
 ];
