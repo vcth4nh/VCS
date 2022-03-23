@@ -36,24 +36,21 @@ class RegisteredUserController extends Controller
         $request->validate([
             'username' => ['required', 'string', 'min:6', 'max:35', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['string', 'email', 'max:360'],
-            'phone' => ['string', 'min:5', 'max:15'],
-            'teacher' => ['string', 'size:7'],
+            'fullname' => ['required', 'string', 'max:255'],
+            'email' => ['string', 'email', 'max:360', 'nullable'],
+            'phone' => ['phone_number', 'nullable'],
+            'role' => ['required', 'string', 'size:7'],
         ]);
-
         $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            'name' => $request->name,
+            'fullname' => $request->fullname,
             'email' => $request->email,
             'phone' => $request->phone,
-            'teacher' => $request->role,
+            'role' => $request->role,
         ]);
 
         event(new Registered($user));
-
-        Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
     }

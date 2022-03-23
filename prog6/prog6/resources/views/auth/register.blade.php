@@ -1,4 +1,5 @@
-<x-guest-layout {{ __('titles.reg') }}>
+<x-guest-layout>
+    <x-slot name="title">{{ config('app.name') }} | {{ __('titles.login') }}</x-slot>
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
@@ -23,9 +24,10 @@
 
             <!-- Name -->
             <div class="mt-4">
-                <x-label for="name" :value="__('fields.name')"/>
+                <x-label for="fullname" :value="__('fields.fullname')"/>
 
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
+                <x-input id="fullname" class="block mt-1 w-full" type="text" name="fullname" :value="old('fullname')"
+                         required
                          autofocus/>
             </div>
 
@@ -33,14 +35,14 @@
             <div class="mt-4">
                 <x-label for="email" :value="__('fields.email')"/>
 
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required/>
+                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"/>
             </div>
 
             <!-- Phone Number -->
             <div class="mt-4">
                 <x-label for="phone" :value="__('fields.phone')"/>
 
-                <x-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')" required/>
+                <x-input id="phone" class="block mt-1 w-full" type="text" name="phone" :value="old('phone')"/>
             </div>
 
             <!-- Password -->
@@ -76,10 +78,6 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
-
                 <x-button class="ml-4">
                     {{ __('Register') }}
                 </x-button>

@@ -2,7 +2,7 @@
 
 return [
     'username' => 'Tên đăng nhập',
-    'name' => 'Họ và Tên',
+    'fullname' => 'Họ và Tên',
     'phone' => 'Số điện thoại',
     'email' => 'Email',
     'password' => 'Mật khẩu',

@@ -1,5 +1,8 @@
 <?php
 
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,12 +21,20 @@ require __DIR__ . '/auth.php';
 Route::redirect('/', 'login');
 
 Route::middleware('auth')->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-    Route::view('user-list', 'user-list')->name('user-list');
-    Route::view('challenges', 'challenges')->name('challenges');
+    Route::get('dashboard', [UsersController::class, 'index'])->name('dashboard.index');
+    Route::get('user-list', [MsgController::class, 'index'])->name('user-list.index');
+    Route::view('challenges', 'challenges')->name('challenges.index');
 
-    Route::post('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::post('dashboard', [UsersController::class, 'store'])->name('dashboard.store');
+    Route::post('dashboard/avatar', [AvatarController::class, 'store'])->name('avatar.store');
+
+    Route::middleware('teacher')->group(function () {
+        Route::get('register', [RegisteredUserController::class, 'create'])
+            ->name('register');
+        Route::post('register', [RegisteredUserController::class, 'store']);
+        Route::delete('dashboard', [UsersController::class, 'destroy'])->name('dashboard.destroy')
+            ->middleware('teacher');
+
+    });
 });
 

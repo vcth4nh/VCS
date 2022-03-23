@@ -129,6 +129,10 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute must be a valid URL.',
     'uuid' => 'The :attribute must be a valid UUID.',
+    'not_exist_with_another_uid' => 'Tên đăng nhập :value đã tồn tại',
+    'phone_number' => 'Số điện thoại chỉ bao gồm 5-15 kí tự số',
+    'is_student' => 'Người dùng không phải học sinh',
+
 
     /*
     |--------------------------------------------------------------------------

@@ -8,18 +8,18 @@ CREATE TABLE IF NOT EXISTS users
     uid      INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(15) UNIQUE                                              NOT NULL,
     password VARCHAR(60)                                                     NULL,
-    name     VARCHAR(100) CHARACTER SET utf8mb4 COLLATE 'utf8mb4_general_ci' NOT NULL,
+    fullname     VARCHAR(100) CHARACTER SET utf8mb4 COLLATE 'utf8mb4_general_ci' NOT NULL,
     email    VARCHAR(320)                                                    NULL,
     phone    VARCHAR(15)                                                     NULL,
-    teacher  BIT                                                             NOT NULL,
+    role     BIT                                                             NOT NULL,
     avatar   VARCHAR(50)                                                     NULL
 );
 
-INSERT INTO users (username, name, password, teacher)
-VALUES ('vcht4nh', 'Vũ Chí Thành', '$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi', 'teacher'),
+INSERT INTO users (username, fullname, password, role)
+VALUES ('vcth4nh', 'Vũ Chí Thành', '$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi', 'teacher'),
        ('student1', 'Học sinh 1', '$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi', 'student'),
        ('student2', 'Học sinh 2', '$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi', 'student'),
-       ('teacher1', 'Giáo viên 1', '$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi', 'student'),
+       ('teacher1', 'Giáo viên 1', '$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi', 'teacher'),
        ('teacher2', 'Giáo viên 2', '$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi', 'teacher');
 UPDATE users
 SET `password`='$2y$10$W1mChCZbUriGSSIoGURZS.buYOOkERyuNyUmwLxYzch2b2Z20iHRi';
