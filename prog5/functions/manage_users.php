@@ -53,7 +53,7 @@ function list_users($option, $student_id = null)
         $table_header = '<tr><th>Họ và tên</th><th>Số điện thoại</th><th>Email</th>';
         $table_header .= match ($action) {
             UPDATE => "<th>Tên đăng nhập</th><th>Mật khẩu</th><th>Cập nhật</th>" . $delete_col . "<th class='small-cell'></th></tr>\n",
-            MSG => "<th class='small-cell blue'>Nhắn tin</th><th class='small-cell blue'>Xem tin nhắn</tr>\n",
+            MSG => "<th class='small-cell blue'>Nhắn tin</th><th class='small-cell blue'>Xem tin nhắn</th></tr>\n",
             default => "</tr>\n",
         };
         echo "$table_header\n";
