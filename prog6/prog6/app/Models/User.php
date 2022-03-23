@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -30,7 +33,6 @@ class User extends Authenticatable
         'email',
         'phone',
         'role',
-        'avatar'
     ];
 
     /**
@@ -44,57 +46,81 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
-
-    /**
      * Trả về danh sach học sinh
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public static function student()
     {
-        return User::all()->where('role', '=', STUDENT);
+        return User::query()
+            ->where('role', '=', STUDENT)
+            ->get();
     }
 
     /**
      * Trả về danh sách giáo viên
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return Collection
      */
     public static function teacher()
     {
-        return User::all()->where('role', '=', TEACHER);
+        return User::query()
+            ->where('role', '=', TEACHER)
+            ->get();
+    }
+
+//    /**
+//     * Lấy thông tin user từ username hoặc uid
+//     *
+//     * @param array $key
+//     * @return User|User[]|Collection|Model|never|null
+//     */
+//    public static function info(array $key)
+//    {
+//        return match (array_key_first($key)) {
+//            'uid' => User::findOrFail($key['uid']),
+//            'username' => User::where('username', $key['username'])->firstOrFail(),
+//            default => abort(500)
+//        };
+//    }
+
+    /**
+     * Lấy thông tin người dùng từ username
+     *
+     * @param $username
+     * @return User|Model
+     */
+    public static function uname_info($username)
+    {
+        return User::where('username', $username)->firstOrFail();
     }
 
     /**
-     * Lấy thông tin user từ username hoặc uid
+     * Cập nhật thông tin học sinh
      *
-     * @param array $key
-     * @param $role
-     * @return User|User[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|never|null
+     * @param $info
+     * @param null $uid
+     * @return int
      */
-    public static function info(array $key, $role = null)
+    public static function update_student($info, $uid = null)
     {
-        return match (array_key_first($key)) {
-            'uid' => User::findOrFail($key['uid']),
-            'username' => User::where('username', $key['username'])->firstOrFail(),
-            default => abort(500)
-        };
+        $uid = $uid ?? Auth::user()->uid;
+        return User::query()
+            ->where('uid', $uid)
+            ->update($info);
     }
 
     /**
-     * Kiểm tra có tồn tại record nào không
+     * Xóa học sinh
      *
-     * @return bool
+     * @param $uid
+     * @return bool|null
      */
-    public function any()
+    public static function delete_student($uid)
     {
-        return $this->count() > 0;
+        return User::query()
+            ->where('role', STUDENT)
+            ->findOrFail($uid)
+            ->delete();
     }
 }

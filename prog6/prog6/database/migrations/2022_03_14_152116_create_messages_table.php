@@ -21,10 +21,10 @@ return new class extends Migration {
          */
         Schema::create('messages', function (Blueprint $table) {
             $table->id('msg_id');
-            $table->bigInteger('send_id');
-            $table->bigInteger('recv_id');
-            $table->timestamp('recv_time')->useCurrent();
-            $table->timestamp('edit_time')->useCurrent()->useCurrentOnUpdate();
+            $table->bigInteger('send_uid');
+            $table->bigInteger('recv_uid');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->string('text')->charset('utf8mb4')->collation('utf8mb4_general_ci');
         });
     }

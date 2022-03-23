@@ -21,7 +21,6 @@ return new class extends Migration {
          * email    VARCHAR(320)                                                    NULL,
          * phone    VARCHAR(15)                                                     NULL,
          * role  VARCHAR(7)                                                      NOT NULL,
-         * avatar   VARCHAR(50)                                                     NULL
          */
         Schema::create('users', function (Blueprint $table) {
             $table->id('uid');
@@ -31,11 +30,9 @@ return new class extends Migration {
             $table->string('email', 320)->nullable();
             $table->string('phone', 15)->nullable();
             $table->string('role', 7);
-            $table->string('avatar', 50)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
-        User::create();
     }
 
     /**

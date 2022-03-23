@@ -1,1 +1,1 @@
-<img src="VCS_logo.png" {{ $attributes }} alt="logo">
+<img src="{{asset('VCS_logo.png')}}" {{ $attributes }} alt="logo">

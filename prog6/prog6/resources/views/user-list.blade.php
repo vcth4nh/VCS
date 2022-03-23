@@ -8,7 +8,7 @@
 
     <x-page-field>
         <x-table.table :action="DISPLAY">
-            <x-slot name="table_name">{{__('titles.teacher-list')}}</x-slot>
+            <x-slot name="table_name">{{__('titles.student-list')}}</x-slot>
             @if($student_list->isNotEmpty())
                 @foreach($student_list as $student)
                     <x-table.body-row.message :user="$student"/>
@@ -26,4 +26,52 @@
             @endif
         </x-table.table>
     </x-page-field>
+
+    <x-page-field id="send-msg" class="hidden">
+        <form method="post" action="{{ route('msg.store') }}">
+            <input type="hidden" name="recv_uid" value="">
+            @csrf
+            <label>
+                <span id="send-to"></span><br>
+                <textarea name="text"></textarea>
+            </label>
+            <br>
+            <button type="submit">Gửi</button>
+        </form>
+    </x-page-field>
+
+    @if($msg_list->isNotEmpty())
+        <x-page-field id="msg-history">
+            @foreach($msg_list as $msg)
+                <div class="full-width-container">
+                    <hr>
+                    <h4>Gửi đến {{$msg['recv_uid']}} lúc {{$msg['created_at']}}</h4>
+                    @if($msg['updated_at']!=$msg['created_at'])
+                        <p>Chỉnh sửa lần cuối lúc {{$msg['updated_at']}}</p>
+                    @endif
+                    <form method="post" id="msg_{{$msg['msg_id']}}" action="{{ route('msg.update') }}">
+                        @csrf
+                        @method('put')
+                        <textarea name="text" disabled>{{$msg['text']}}</textarea><br>
+                        <button type="button" id="edit-button" onclick="editMgs('{{$msg['msg_id']}}')">
+                            Sửa
+                        </button>
+                        <button type="submit" id="submit-button" name="msg_id" value="{{$msg['msg_id']}}"
+                                class="hidden">
+                            Gửi
+                        </button>
+                        <button type="submit" name="msg_id" value="{{$msg['msg_id']}}"
+                                onclick="return confirm('Xác nhận xóa tin nhắn')" form="delete-msg">
+                            Xóa
+                        </button>
+                    </form>
+                    <form id="delete-msg" action="{{route('msg.destroy')}}" method="post">
+                        @csrf
+                        @method('delete')
+                    </form>
+                </div>
+            @endforeach
+        </x-page-field>
+    @endif
+
 </x-app-layout>

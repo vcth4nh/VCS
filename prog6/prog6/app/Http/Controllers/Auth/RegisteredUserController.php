@@ -41,7 +41,7 @@ class RegisteredUserController extends Controller
             'phone' => ['phone_number', 'nullable'],
             'role' => ['required', 'string', 'size:7'],
         ]);
-        $user = User::create([
+        User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'fullname' => $request->fullname,
@@ -49,9 +49,6 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'role' => $request->role,
         ]);
-
-        event(new Registered($user));
-
         return redirect(RouteServiceProvider::HOME);
     }
 }

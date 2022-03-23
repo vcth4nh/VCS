@@ -13,8 +13,6 @@
         </h2>
     </x-slot>
 
-    <x-avatar/>
-
     <x-notification class="m-4" :success="$message ?? null"/>
     <x-page-field>
         <a href="{{ route('register') }}">Thêm người dùng mới</a>
@@ -26,12 +24,12 @@
                 <x-slot name="table_name">{{__('titles.student-list')}}</x-slot>
                 @if($student_list->isNotEmpty())
                     @foreach($student_list as $student)
-                        <x-table.body-row.update :user="$student"/>
+                        <x-table.body-row.user.update :user="$student"/>
                     @endforeach
                 @endif
             @else
                 <x-slot name="table_name">{{__('titles.personal-info')}}</x-slot>
-                <x-table.body-row.update :user="$personal_info"/>
+                <x-table.body-row.user.update :user="$personal_info"/>
             @endif
         </x-table.table>
         <div id="delete-form">
@@ -49,7 +47,7 @@
                 <x-slot name="table_name">{{__('titles.teacher-list')}}</x-slot>
                 @if($teacher_list->isNotEmpty())
                     @foreach($teacher_list as $teacher)
-                        <x-table.body-row.display :user="$teacher"/>
+                        <x-table.body-row.user.display :user="$teacher"/>
                     @endforeach
                 @endif
             </x-table.table>
