@@ -8,5 +8,6 @@ return [
     'student-list' => 'Danh sách học sinh',
     'teacher-list' => 'Danh sách giáo viên',
     'personal-info' => 'Thông tin cá nhân',
-    'add-student' => 'Thêm học sinh'
+    'add-student' => 'Thêm học sinh',
+    'exercises' => 'Bài tập',
 ];

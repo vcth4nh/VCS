@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -29,17 +30,50 @@ class Msg extends Model
     ];
 
     /**
-     * Hiển thị các tin nhắn đã gửi đến một user khác
+     * Tạo relationship của cột send_uid đến table users
+     *
+     * @return BelongsTo
+     */
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'send_uid');
+    }
+
+    /**
+     * Tạo relationship của cột recv_uid đến table users
+     *
+     * @return BelongsTo
+     */
+    public function recver()
+    {
+        return $this->belongsTo(User::class, 'recv_uid');
+    }
+
+    /**
+     * Hiển thị các tin nhắn đã gửi đến các user khác
      *
      * @param $send_uid
-     * @param $revc_uid
+     * @param null $recv_uid
+     * Mặc định là null, nếu được truyền vào uid của user khác thì sẽ
+     * hiển thị tin nhắn đến user đó
+     *
      * @return Builder[]|Collection
      */
-    public static function get_msg($send_uid, $revc_uid)
+    public static function get_sent_msg($send_uid, $recv_uid = null)
+    {
+        $msg_list = Msg::query()
+            ->where('send_uid', $send_uid);
+
+        return match ($recv_uid) {
+            null => $msg_list->where('recv_uid', $recv_uid)->get(),
+            default => $msg_list->get()
+        };
+    }
+
+    public static function get_recved_msg($recv_uid)
     {
         return Msg::query()
-            ->where('send_uid', $send_uid)
-            ->where('recv_uid', $revc_uid)
+            ->where('recv_uid', $recv_uid)
             ->get();
     }
 
@@ -50,7 +84,8 @@ class Msg extends Model
      * @param $text
      * @return int
      */
-    public static function update_msg($msg_id, $text)
+    public
+    static function update_msg($msg_id, $text)
     {
         return Msg::query()
             ->where('msg_id', $msg_id)
@@ -64,7 +99,8 @@ class Msg extends Model
      * @param $msg_id
      * @return bool|null
      */
-    public static function delete_msg($msg_id)
+    public
+    static function delete_msg($msg_id)
     {
         return Msg::query()
             ->where('msg_id', $msg_id)

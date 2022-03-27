@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Msg;
 use App\Models\User;
 use Auth;
 use Illuminate\Contracts\Foundation\Application;
@@ -15,18 +16,29 @@ class UsersController extends Controller
     /**
      * Hiển thị trang chủ sau khi đã đăng nhập
      *
-     * @param $message
+     * @param $notification
      * @return Application|Factory|View
      */
-    public function index($message = null)
+    public function index($notification = null)
     {
+        $msg_list = Msg::get_recved_msg(Auth::user()->uid);
+
         if (Auth::user()->role == TEACHER) {
             $student_list = User::student();
             $teacher_list = User::teacher();
-            return view('dashboard', ['student_list' => $student_list, 'teacher_list' => $teacher_list, 'message' => $message]);
+            return view('dashboard-teacher', [
+                'student_list' => $student_list,
+                'teacher_list' => $teacher_list,
+                'notification' => $notification,
+                'msg_list' => $msg_list
+            ]);
         } else {
             $personal_info = User::uname_info(Auth::user()->username);
-            return view('dashboard', ['personal_info' => $personal_info, 'message' => $message]);
+            return view('dashboard-student', [
+                'personal_info' => $personal_info,
+                'notification' => $notification,
+                'msg_list' => $msg_list
+            ]);
         }
     }
 
@@ -54,8 +66,8 @@ class UsersController extends Controller
             ]);
             $success = User::update_student($request->teacher_update(), $request->uid);
         }
-        $message = $success ? __('notification.update-user') : null;
-        return $this->index($message);
+        $notification = $success ? __('notification.update-user') : null;
+        return $this->index($notification);
     }
 
     /**
@@ -71,7 +83,7 @@ class UsersController extends Controller
         ]);
 
         $success = User::delete_student($request->uid);
-        $message = $success ? __('notification.delete-user') : null;
-        return $this->index($message);
+        $notification = $success ? __('notification.delete-user') : null;
+        return $this->index($notification);
     }
 }

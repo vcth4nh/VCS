@@ -19,7 +19,7 @@ return new class extends Migration {
          */
         Schema::create('challs', function (Blueprint $table) {
             $table->id('chall_id');
-            $table->timestamp('post_time')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
             $table->string('hint')->charset('utf8mb4')->collation('utf8mb4_general_ci');
         });
     }

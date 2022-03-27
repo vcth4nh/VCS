@@ -21,26 +21,48 @@ require __DIR__ . '/auth.php';
 Route::redirect('/', 'login');
 
 Route::middleware('auth')->group(function () {
-    Route::get('dashboard', [UsersController::class, 'index'])->name('dashboard.index');
-    Route::post('dashboard', [UsersController::class, 'update'])->name('dashboard.update');
-
-    Route::get('user-list', [MsgController::class, 'index'])->name('user-list.index');
-    Route::get('user-list/view-msg/{recv_uid?}', [MsgController::class, 'index'])->name('msg.index');
-    Route::post('user-list/msg', [MsgController::class, 'store'])->name('msg.store');
-    Route::put('user-list/msg', [MsgController::class, 'update'])->name('msg.update');
-    Route::delete('user-list/msg', [MsgController::class, 'destroy'])->name('msg.destroy');
-
-
-    Route::view('challenges', 'challenges')->name('challenges.index');
-
-
-    Route::middleware('teacher')->group(function () {
-        Route::get('register', [RegisteredUserController::class, 'create'])
+    Route::prefix('register')->middleware('teacher')->group(function () {
+        Route::get('/', [RegisteredUserController::class, 'create'])
             ->name('register');
-        Route::post('register', [RegisteredUserController::class, 'store']);
-        Route::delete('dashboard', [UsersController::class, 'destroy'])->name('dashboard.destroy')
-            ->middleware('teacher');
-
+        Route::post('/', [RegisteredUserController::class, 'store']);
     });
+
+
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [UsersController::class, 'index'])
+            ->name('dashboard.index');
+        Route::post('/', [UsersController::class, 'update'])
+            ->name('dashboard.update');
+        Route::delete('/', [UsersController::class, 'destroy'])
+            ->name('dashboard.destroy')->middleware('teacher');
+    });
+
+
+    Route::prefix('user-list')->group(function () {
+        Route::get('/', [MsgController::class, 'index'])
+            ->name('user-list.index');
+        Route::get('/msg/{recv_uid?}', [MsgController::class, 'index'])
+            ->name('msg.index');
+        Route::post('/msg', [MsgController::class, 'store'])
+            ->name('msg.store');
+        Route::put('/msg', [MsgController::class, 'update'])
+            ->name('msg.update');
+        Route::delete('/msg', [MsgController::class, 'destroy'])
+            ->name('msg.destroy');
+    });
+
+
+    Route::prefix('challenges')->group(function () {
+        Route::get('/', [ChallsController::class, 'index'])
+            ->name('challenges.index');
+        Route::get('/check', [ChallsController::class, 'check'])
+            ->name('challenges.check');
+        Route::post('/check', [ChallsController::class, 'check'])
+            ->name('challenges.check');
+        Route::post('/', [ChallsController::class, 'store'])
+            ->name('challenges.store');
+    });
+
+
 });
 

@@ -26,7 +26,7 @@ class MsgController extends Controller
         if ($recv_uid === null)
             return view('user-list', ['student_list' => $student_list, 'teacher_list' => $teacher_list]);
 
-        $msg_list = Msg::get_msg(Auth::user()->uid, $recv_uid);
+        $msg_list = Msg::get_sent_msg(Auth::user()->uid, $recv_uid);
         return view('user-list', ['student_list' => $student_list, 'teacher_list' => $teacher_list, 'msg_list' => $msg_list]);
     }
 

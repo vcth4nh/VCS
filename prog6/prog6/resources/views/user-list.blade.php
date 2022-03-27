@@ -40,30 +40,30 @@
         </form>
     </x-page-field>
 
-    @if($msg_list->isNotEmpty())
+    @if(isset($msg_list) && $msg_list->isNotEmpty())
         <x-page-field id="msg-history">
             @foreach($msg_list as $msg)
-                <div class="full-width-container">
+                <div>
                     <hr>
-                    <h4>Gửi đến {{$msg['recv_uid']}} lúc {{$msg['created_at']}}</h4>
+                    <p class="font-bold text-lg">Gửi đến {{$msg->recver->fullname}} lúc {{$msg['created_at']}}</p>
                     @if($msg['updated_at']!=$msg['created_at'])
-                        <p>Chỉnh sửa lần cuối lúc {{$msg['updated_at']}}</p>
+                        <p class="text-sm text-gray-600">Chỉnh sửa lần cuối lúc {{$msg['updated_at']}}</p>
                     @endif
                     <form method="post" id="msg_{{$msg['msg_id']}}" action="{{ route('msg.update') }}">
                         @csrf
                         @method('put')
-                        <textarea name="text" disabled>{{$msg['text']}}</textarea><br>
-                        <button type="button" id="edit-button" onclick="editMgs('{{$msg['msg_id']}}')">
+                        <textarea name="text" class="disabled:opacity-75" disabled>{{$msg['text']}}</textarea><br>
+                        <x-button type="button" id="edit-button" :onclick="'editMgs(\''.$msg['msg_id'].'\')'">
                             Sửa
-                        </button>
-                        <button type="submit" id="submit-button" name="msg_id" value="{{$msg['msg_id']}}"
-                                class="hidden">
+                        </x-button>
+                        <x-button id="submit-button" name="msg_id" :value="$msg['msg_id']"
+                                  class="hidden">
                             Gửi
-                        </button>
-                        <button type="submit" name="msg_id" value="{{$msg['msg_id']}}"
-                                onclick="return confirm('Xác nhận xóa tin nhắn')" form="delete-msg">
+                        </x-button>
+                        <x-button name="msg_id" :value="$msg['msg_id']"
+                                  :onclick="'return confirm(\'Xác nhận xóa tin nhắn\')'" form="delete-msg">
                             Xóa
-                        </button>
+                        </x-button>
                     </form>
                     <form id="delete-msg" action="{{route('msg.destroy')}}" method="post">
                         @csrf

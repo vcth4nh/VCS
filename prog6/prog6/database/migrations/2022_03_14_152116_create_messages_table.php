@@ -26,6 +26,10 @@ return new class extends Migration {
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->string('text')->charset('utf8mb4')->collation('utf8mb4_general_ci');
+            $table->index('send_uid');
+//            $table->foreign('send_uid')->references('uid')->on('users');
+            $table->index('recv_uid');
+//            $table->foreign('recv_uid')->references('uid')->on('users');
         });
     }
 
