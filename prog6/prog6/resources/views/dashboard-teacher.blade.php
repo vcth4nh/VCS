@@ -1,11 +1,4 @@
 <x-app-layout>
-    <x-slot name="style">
-        <style>
-            #table-update td:nth-last-child({{Auth::user()->role==TEACHER ? 3 : 2}}) {
-                position: relative;
-            }
-        </style>
-    </x-slot>
     <x-slot name="title">{{ config('app.name') }} | {{ __('titles.dashboard') }}</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -19,7 +12,7 @@
         <div class="grid grid-cols-2">
             <div class="p-6  pt-0">
                 <div class="mb-3">
-                    <p class="text-lg text-center">Upload bài tập mới</p>
+                    <p class="text-lg font-bold text-center">Upload bài tập mới</p>
                     <div class="flex justify-center">
                         <form method="post" action="{{route('exercises.store')}}" enctype="multipart/form-data">
                             @csrf
@@ -32,6 +25,7 @@
                         </form>
                     </div>
                 </div>
+                <hr><br>
                 <x-exercises :exer_list="$exer_list"/>
             </div>
             <x-msg-board :msg_list="$msg_list"/>

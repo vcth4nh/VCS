@@ -19,6 +19,7 @@
             @endif
         </x-table.table>
     </x-page-field>
+
     <x-page-field>
         <x-table.table>
             <x-slot name="table_name">{{__('titles.teacher-list')}}</x-slot>
@@ -76,6 +77,7 @@
                         @method('delete')
                     </form>
                 </div>
+                <br>
             @endforeach
         </x-page-field>
     @endif

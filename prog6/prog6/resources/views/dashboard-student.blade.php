@@ -1,11 +1,4 @@
 <x-app-layout>
-    <x-slot name="style">
-        <style>
-            #table-update td:nth-last-child({{Auth::user()->role==TEACHER ? 3 : 2}}) {
-                position: relative;
-            }
-        </style>
-    </x-slot>
     <x-slot name="title">{{ config('app.name') }} | {{ __('titles.dashboard') }}</x-slot>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">

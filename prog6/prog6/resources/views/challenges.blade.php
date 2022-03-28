@@ -15,7 +15,8 @@
                 <input
                     class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     type="file" name="chall">
-                <textarea spellcheck="false" name="hint" placeholder="Nhập hint cho challenge"></textarea>
+                <br>
+                <textarea class="w-full h-[100px]" spellcheck="false" name="hint" placeholder="Nhập hint cho challenge"></textarea>
                 <br>
                 <x-button>Đăng</x-button>
             </form>
@@ -40,7 +41,7 @@
 
     @if(isset($chall_list) && $chall_list->isNotEmpty())
         <x-page-field>
-            <div class="grid grid-cols-4">
+            <div class="grid grid-cols-4 gap-3">
                 @php($count=0)
                 @foreach($chall_list as $chall)
                     @php($count++)
@@ -53,8 +54,8 @@
                             <p class="text-lg">Gợi ý: {{$chall['hint']}}</p>
                             <label>
                                 <p></p>
-                                <textarea name="answer"></textarea>
-                            </label>
+                                <textarea class="w-full" name="answer"></textarea>
+                            </label><br>
                             <x-button name="chall_id" value="{{$chall['chall_id']}}">Nộp</x-button>
                         </form>
                     </div>
