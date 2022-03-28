@@ -71,12 +71,20 @@ function create_form(formId, action = 'post') {
 //     add_new_student("new_teacher")
 // }
 
-function cfDel(user, uid, formID) {
+function cfDelUser(user, uid, formID) {
     let form = document.querySelector('#delete-form form');
     form.id = 'form_' + formID;
     form.querySelector('input[name=uid]').value = uid;
 
-    return confirm('Xác nhận xóa ' + user);
+    return confirm('Xác nhận xóa học sinh ' + user);
+}
+
+function cfDelExer(original_name, exer_id, formID) {
+    let form = document.querySelector('#delete-exer form');
+    form.id = 'form_' + formID;
+    form.querySelector('input[name=exer_id]').value = exer_id;
+
+    return confirm('Xác nhận xóa bài tập ' + original_name);
 }
 
 function editUser(formID) {
@@ -88,10 +96,6 @@ function editUser(formID) {
     }
     displaySubmitButton(row)
     create_form(formID)
-}
-
-function toBottom() {
-    window.scrollTo(0, document.body.scrollHeight);
 }
 
 function sendMessage(fullname, recv_uid) {
@@ -112,4 +116,16 @@ function editMgs(msg_id) {
     let msg = document.getElementById(msg_id);
     msg.getElementsByTagName('textarea')[0].disabled = false;
     displaySubmitButton(msg);
+}
+
+function showSubmitted(href) {
+    let element = document.getElementById('submitted-list');
+    element.hidden = false;
+    element.querySelector(':scope iframe').src = href
+}
+
+function showUpload(exer_id) {
+    let element = document.getElementById('upload-submit');
+    element.hidden = false;
+    element.querySelector(':scope input[name=exer_id]').value =exer_id
 }

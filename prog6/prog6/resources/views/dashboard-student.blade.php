@@ -13,22 +13,36 @@
         </h2>
     </x-slot>
 
+    <x-notification class="m-4" :success="$message ?? null"/>
+
     <x-page-field>
         <div class="grid grid-cols-2">
-            <div class="p-6">
-                <x-table.table>
-                    <x-slot name="table_name">{{__('titles.exercises')}}</x-slot>
-                    <x-table.header-exer></x-table.header-exer>
-                </x-table.table>
+            <div class="p-6  pt-0">
+                <x-exercises :exer_list="$exer_list"/>
             </div>
             <x-msg-board :msg_list="$msg_list"/>
         </div>
     </x-page-field>
 
-    <x-notification class="m-4" :success="$message ?? null"/>
+    <x-page-field id="upload-submit" hidden>
+        <form action="{{route('submitted.store')}}" method="post" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="exer_id" value="">
+            <input
+                class="inline-block text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                type="file" name="submitted">
+            <div class="inline-block ml-4">
+                <x-button>Nộp</x-button>
+            </div>
+        </form>
+    </x-page-field>
+
     <x-page-field>
         <x-table.table id="table-update" :action="UPDATE">
             <x-slot name="table_name">{{__('titles.personal-info')}}</x-slot>
+            <x-slot name="table_header">
+                <x-table.header-user :action="UPDATE"/>
+            </x-slot>
             <x-table.body-row.user.update :user="$personal_info"/>
         </x-table.table>
     </x-page-field>

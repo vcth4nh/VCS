@@ -5,7 +5,7 @@
     {{--    <x-slot name="result">{{$result}}</x-slot> TODO làm V X kết quả--}}
     <x-table.body-row.user.update-full-info :user="$user" :disabled="true"/>
     <td>
-        <x-button class="text-center" id='edit-button' type='button' onclick="editUser('{{'user_'.$user['uid']}}')">
+        <x-button class="text-center" id='edit-button' type='button' onclick="editUser('user_{{$user['uid']}}')">
             Sửa
         </x-button>
         <x-button class="text-center hidden" id='submit-button' :form='"form_user_".$user["uid"]'>
@@ -15,7 +15,7 @@
     @if(Auth::user()->role==TEACHER)
         <td>
             <x-button class="text-center" :form='"form_delete_user_".$user["uid"]'
-                      :onclick="'return cfDel(\''.$user['fullname'].'\',\''.$user['uid'].'\',\'delete_user_'.$user['uid'].'\')'">
+                      onclick="return cfDelUser('{{$user['fullname']}}','{{$user['uid']}}','delete_user_{{$user['uid']}}')">
                 Xóa
             </x-button>
         </td>

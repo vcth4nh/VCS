@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exers;
 use App\Models\Msg;
 use App\Models\User;
 use Auth;
@@ -21,24 +22,26 @@ class UsersController extends Controller
      */
     public function index($notification = null)
     {
-        $msg_list = Msg::get_recved_msg(Auth::user()->uid);
+        $data = [
+            'notification' => $notification,
+            'msg_list' => Msg::get_recved_msg(Auth::user()->uid),
+            'exer_list' => Exers::all(),
+        ];
 
         if (Auth::user()->role == TEACHER) {
             $student_list = User::student();
             $teacher_list = User::teacher();
             return view('dashboard-teacher', [
-                'student_list' => $student_list,
-                'teacher_list' => $teacher_list,
-                'notification' => $notification,
-                'msg_list' => $msg_list
-            ]);
+                    'student_list' => $student_list,
+                    'teacher_list' => $teacher_list,
+                ] + $data
+            );
         } else {
             $personal_info = User::uname_info(Auth::user()->username);
             return view('dashboard-student', [
-                'personal_info' => $personal_info,
-                'notification' => $notification,
-                'msg_list' => $msg_list
-            ]);
+                    'personal_info' => $personal_info,
+                ] + $data
+            );
         }
     }
 

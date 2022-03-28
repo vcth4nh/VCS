@@ -10,4 +10,5 @@ return [
     'personal-info' => 'Thông tin cá nhân',
     'add-student' => 'Thêm học sinh',
     'exercises' => 'Bài tập',
+    'submitted' => 'Bài làm',
 ];

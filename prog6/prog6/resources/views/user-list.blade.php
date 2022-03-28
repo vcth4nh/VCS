@@ -7,8 +7,11 @@
     </x-slot>
 
     <x-page-field>
-        <x-table.table :action="DISPLAY">
+        <x-table.table>
             <x-slot name="table_name">{{__('titles.student-list')}}</x-slot>
+            <x-slot name="table_header">
+                <x-table.header-msg/>
+            </x-slot>
             @if($student_list->isNotEmpty())
                 @foreach($student_list as $student)
                     <x-table.body-row.message :user="$student"/>
@@ -17,8 +20,11 @@
         </x-table.table>
     </x-page-field>
     <x-page-field>
-        <x-table.table :action="DISPLAY">
+        <x-table.table>
             <x-slot name="table_name">{{__('titles.teacher-list')}}</x-slot>
+            <x-slot name="table_header">
+                <x-table.header-msg/>
+            </x-slot>
             @if($teacher_list->isNotEmpty())
                 @foreach($teacher_list as $teacher)
                     <x-table.body-row.message :user="$teacher"/>
@@ -53,7 +59,7 @@
                         @csrf
                         @method('put')
                         <textarea name="text" class="disabled:opacity-75" disabled>{{$msg['text']}}</textarea><br>
-                        <x-button type="button" id="edit-button" :onclick="'editMgs(\''.$msg['msg_id'].'\')'">
+                        <x-button type="button" id="edit-button" onclick="editMgs('{{$msg['msg_id']}}')">
                             Sửa
                         </x-button>
                         <x-button id="submit-button" name="msg_id" :value="$msg['msg_id']"
@@ -61,7 +67,7 @@
                             Gửi
                         </x-button>
                         <x-button name="msg_id" :value="$msg['msg_id']"
-                                  :onclick="'return confirm(\'Xác nhận xóa tin nhắn\')'" form="delete-msg">
+                                  onclick="return confirm('Xác nhận xóa tin nhắn')" form="delete-msg">
                             Xóa
                         </x-button>
                     </form>

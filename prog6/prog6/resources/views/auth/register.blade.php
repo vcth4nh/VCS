@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <x-slot name="title">{{ config('app.name') }} | {{ __('titles.login') }}</x-slot>
+    <x-slot name="title">{{ config('app.name') }} | {{ __('titles.register') }}</x-slot>
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">

@@ -20,7 +20,7 @@ return new class extends Migration {
          */
         Schema::create('exercises', function (Blueprint $table) {
             $table->id('exer_id');
-            $table->timestamp('post_time')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
             $table->string('location')->unique();
             $table->string('original_name')->charset('utf8mb4')->collation('utf8mb4_general_ci');
         });

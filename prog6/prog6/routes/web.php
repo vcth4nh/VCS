@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Models\Exers;
+use App\Models\Submitted;
 use Illuminate\Support\Facades\Route;
+use Monolog\Handler\RotatingFileHandler;
+use PHPUnit\Runner\Filter\ExcludeGroupFilterIterator;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +41,23 @@ Route::middleware('auth')->group(function () {
             ->name('dashboard.destroy')->middleware('teacher');
     });
 
+    Route::prefix('exercises')->group(function () {
+        Route::post('/upload', [ExersController::class, 'store'])
+            ->name('exercises.store');
+        Route::get('/download/{path}', [ExersController::class, 'download'])
+            ->name('exercises.download');
+        Route::delete('/delete', [ExersController::class, 'destroy'])
+            ->name('exercises.destroy')->middleware('teacher');
+    });
+
+    Route::prefix('submitted')->group(function () {
+        Route::get('/{exer_id}', [SubmittedController::class, 'index'])
+            ->name('submitted.index');
+        Route::post('/upload', [SubmittedController::class, 'store'])
+            ->name('submitted.store');
+        Route::get('/download/{path}', [SubmittedController::class, 'download'])
+            ->name('submitted.download');
+    });
 
     Route::prefix('user-list')->group(function () {
         Route::get('/', [MsgController::class, 'index'])

@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->id('sub_id');
             $table->bigInteger('exer_id');
             $table->bigInteger('uid');
-            $table->timestamp('post_time')->useCurrent();
+            $table->timestamp('created_at')->useCurrent();
             $table->string('location')->unique();
             $table->string('original_name')->charset('utf8mb4')->collation('utf8mb4_general_ci');
             $table->index('uid');
