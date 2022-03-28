@@ -42,6 +42,6 @@ class SubmittedController extends Controller
     public function download($path)
     {
         $original_name = Submitted::where('location', $path)->firstOrFail()->original_name;
-        return Storage::download('exers/' . $path, $original_name);
+        return Storage::download('submitted/' . $path, $original_name);
     }
 }

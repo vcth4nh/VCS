@@ -32,7 +32,6 @@
                         </form>
                     </div>
                 </div>
-                {{dd($exer_list)}}
                 <x-exercises :exer_list="$exer_list"/>
             </div>
             <x-msg-board :msg_list="$msg_list"/>
