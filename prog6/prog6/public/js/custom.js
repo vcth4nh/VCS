@@ -87,9 +87,12 @@ function cfDelExer(original_name, exer_id, formID) {
     return confirm('Xác nhận xóa bài tập ' + original_name);
 }
 
-function editUser(formID) {
+function editUser(formID,role) {
     let row = document.getElementById(formID);
-    let el = row.querySelectorAll(":scope input[type=text], :scope input[type=password]");
+    let el;
+    if (role === 'teacher'){
+        el = row.querySelectorAll(":scope input[type=text], :scope input[type=password]");
+    } else  el = row.querySelectorAll(":scope input[name=email], :scope input[name=phone], :scope input[name=password]");
     console.log(el);
     for (let i = 0; i < el.length; i++) {
         el[i].disabled = false;

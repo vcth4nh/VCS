@@ -10,6 +10,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
 class UsersController extends Controller
@@ -45,6 +46,44 @@ class UsersController extends Controller
         }
     }
 
+    /**
+     * Tạo mảng gồm nhũng thông tin cần được update
+     *
+     * @param $fields
+     * Là mảng chứa tên những cột cần được update
+     * Mặc định gồm những cột: username, password, fullname, email, phone
+     *
+     * @return array
+     */
+    private function update_helper(Request $request,$fields = ['username', 'fullname', 'email', 'phone'])
+    {
+        $arr = [];
+        foreach ($fields as $key) {
+            $arr += [$key => $request->__get($key)];
+        }
+        $arr += $request->password === null ? [] : ['password' => Hash::make($request->password)];
+        return $arr;
+    }
+
+    /**
+     * Lấy những thông tin mà học sinh cần update
+     *
+     * @return array
+     */
+    public function student_update(Request $request)
+    {
+        return $this->update_helper($request,['email', 'phone']);
+    }
+
+    /**
+     * Lấy những thông tin mà giáo viên cần update
+     *
+     * @return array
+     */
+    public function teacher_update(Request $request)
+    {
+        return $this->update_helper($request);
+    }
 
     /**
      * Cập nhật thông tin học sinh
@@ -60,14 +99,14 @@ class UsersController extends Controller
             'password' => [Rules\Password::defaults(), 'nullable']
         ]);
         if (Auth::user()->role == STUDENT) {
-            $success = User::update_student($request->student_update());
+            $success = User::update_student($this->student_update($request));
         } else {
             $request->validate([
                 'uid' => ['required', 'is_student'],
                 'username' => ['required', 'string', 'min:6', 'max:35', 'not_exist_with_another_uid:' . $request->uid],
                 'fullname' => ['required', 'string', 'max:255'],
             ]);
-            $success = User::update_student($request->teacher_update(), $request->uid);
+            $success = User::update_student($this->teacher_update($request), $request->uid);
         }
         $notification = $success ? __('notification.update-user') : null;
         return $this->index($notification);
