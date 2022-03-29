@@ -49,13 +49,13 @@ class UsersController extends Controller
     /**
      * Tạo mảng gồm nhũng thông tin cần được update
      *
-     * @param $fields
+     * @param array $fields
      * Là mảng chứa tên những cột cần được update
      * Mặc định gồm những cột: username, password, fullname, email, phone
      *
      * @return array
      */
-    private function update_helper(Request $request,$fields = ['username', 'fullname', 'email', 'phone'])
+    private function update_helper(Request $request, array $fields = ['username', 'fullname', 'email', 'phone'])
     {
         $arr = [];
         foreach ($fields as $key) {
@@ -72,7 +72,7 @@ class UsersController extends Controller
      */
     public function student_update(Request $request)
     {
-        return $this->update_helper($request,['email', 'phone']);
+        return $this->update_helper($request, ['email', 'phone']);
     }
 
     /**

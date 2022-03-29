@@ -65,8 +65,8 @@ class Msg extends Model
             ->where('send_uid', $send_uid);
 
         return match ($recv_uid) {
-            null => $msg_list->where('recv_uid', $recv_uid)->get(),
-            default => $msg_list->get()
+            null => $msg_list->get(),
+            default => $msg_list->where('recv_uid', $recv_uid)->get(),
         };
     }
 
