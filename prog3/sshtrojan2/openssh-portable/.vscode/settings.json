@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "includes.h": "c",
+        "time.h": "c",
+        "config.h": "c"
+    }
+}
