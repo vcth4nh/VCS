@@ -1,6 +1,6 @@
 # Web04
 
-# Logic Flaw
+# Business Logic Flaw
 
 ## **Excessive trust in client-side controls**
 
@@ -271,3 +271,73 @@ Copy paste cookie đó sang `stay-log-in` và xóa cookie `session` đi. Reload 
 Vào Admin panel xóa user `carlos` để hoàn thành lab
 
 ![Untitled](writeup_media/Untitled%2051.png)
+
+# **Information disclosure in error messages**
+
+### **Information disclosure in error messages**
+
+Vào trang sản phẩm, đổi param productID thành chữ cái bất kỳ ta sẽ được thông báo lỗi
+
+![Untitled](writeup_media/Untitled%2052.png)
+
+Submit số phiên bản ở cuối trang để hoàn thành lab
+
+---
+
+### **Information disclosure on debug page**
+
+Xem trong source page có link đến trang debug
+
+![Untitled](writeup_media/Untitled%2053.png)
+
+Trong trang này, tìm đến `SECRET_KEY` và submit nó để hoàn thành lab
+
+![Untitled](writeup_media/Untitled%2054.png)
+
+---
+
+### **Source code disclosure via backup files**
+
+Xem trong `/robots.txt`, ta có path đến `/backup`
+
+![Untitled](writeup_media/Untitled%2055.png)
+
+Vào `/backup` có link đến `/backup/ProductTemplate.java.bak`
+
+![Untitled](writeup_media/Untitled%2056.png)
+
+Vào link trên ta có được `password` của database
+
+![Untitled](writeup_media/Untitled%2057.png)
+
+---
+
+### Authentication bypass via information disclosure
+
+Thử các method đến `/admin`, thấy method TRACE trả về response
+
+![Untitled](writeup_media/Untitled%2058.png)
+
+Đọc response thấy header `X-Custom-IP-Authorization: 8.21.11.33`, gửi request GET đến `/admin` với `X-Custom-IP-Authorization: 127.0.0.1` để truy cập với ip của local network
+
+![Untitled](writeup_media/Untitled%2059.png)
+
+Gửi request GET đến `/admin/delete?username=carlos` để xóa user `carlos`
+
+---
+
+### **Information disclosure in version control history**
+
+Nhận thấy ta có thể truy cập `/.git`
+
+![Untitled](writeup_media/Untitled%2060.png)
+
+Dùng `wget` để tải toàn bộ file về
+
+![Untitled](writeup_media/Untitled%2061.png)
+
+Dùng `git show` để diff 2 commit gần nhất
+
+![Untitled](writeup_media/Untitled%2062.png)
+
+Như vậy ta đã có password của user `administrator`. Login vào và xóa user `carlos` để hoàn thành lab
