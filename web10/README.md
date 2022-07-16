@@ -1,5 +1,16 @@
 # Web10
-
+## Table of Content
+- [DOM-based vulnerabilities](#dom-based-vulnerabilities)
+    - [****DOM XSS using web messages****](#dom-xss-using-web-messages)
+    - [****DOM XSS using web messages and JSON.parse****](#dom-xss-using-web-messages-andjsonparse)
+    - [****DOM-based open redirection****](#dom-based-open-redirection)
+    - [****DOM-based cookie manipulation****](#dom-based-cookie-manipulation)
+    - [****Exploiting DOM clobbering to enable XSS****](#exploiting-dom-clobbering-to-enable-xss)
+    - [****Clobbering DOM attributes to bypass HTML filters****](#clobbering-dom-attributes-to-bypass-html-filters)
+- [WebSocket](#websocket)
+    - [****Manipulating WebSocket messages to exploit vulnerabilities****](#manipulating-websocket-messages-to-exploit-vulnerabilities)
+    - [**Manipulating the WebSocket handshake to exploit vulnerabilities**](#manipulating-the-websocket-handshake-to-exploit-vulnerabilities)
+    - [**Cross-site WebSocket hijacking**](#cross-site-websocket-hijacking)
 # DOM-based vulnerabilities
 
 ### ****DOM XSS using web messages****
@@ -169,19 +180,67 @@ Nhập đoạn mã trên vào phần comment và gửi, sau đó gửi thêm m�
 
 ---
 
+### ****Clobbering DOM attributes to bypass HTML filters****
+
+Có thể thấy các bình luận của ta không được escape ở server-side → client-side sẽ có script để xử lý XSS
+
+![Untitled](wu_media/Untitled%2018.png)
+
+Đọc HTML src thấy có script sử dụng `HTMLJanitor` để lọc các tag HTML
+
+![Untitled](wu_media/Untitled%2019.png)
+
+đọc file `loadCommentsWithHtmlJanitor.js`, ta thấy có các tag `input` và `form` kèm một số attribute của chúng không bị filter
+
+![Untitled](wu_media/Untitled%2020.png)
+
+![Untitled](wu_media/Untitled%2021.png)
+
+Craft đoạn HTML
+
+```html
+<form id=x tabindex=1 onfocus=print()>
+    <input id="attributes">
+</form>
+```
+
+Có thể thấy khi ta có `<input id="attributes">`, node parent của nó khi gọi `.attributes` sẽ trả về node `input` thay vì list các `attributes` của node parent.
+
+![Untitled](wu_media/Untitled%2022.png)
+
+Hơn nữa, ta có `0<node.attributes.length === false` → vòng loop để check các attributes của `HTMLJanitor` sẽ bị skip hoàn toàn:
+
+![Untitled](wu_media/Untitled%2023.png)
+
+→ các attribute của node `form` sẽ không bị filter → ta dễ dàng thực hiện XSS
+
+![Untitled](wu_media/Untitled%2024.png)
+
+Vào Exploit server, tạo `iframe` và set onload delay nửa giây để comment được load hết trước khi redirect sang `#x`  để gọi hàm print()
+
+```html
+<iframe src="https://0a5a001a03f777adc02531fb003300ef.web-security-academy.net/post?postId=6"
+    onload=" setTimeout(() => {this.src = 'https://0a5a001a03f777adc02531fb003300ef.web-security-academy.net/post?postId=6#x';}, 1000);">
+</iframe>
+```
+
+![Untitled](wu_media/Untitled%2025.png)
+
+Gửi cho victim để hoàn thành lab
+
 # WebSocket
 
 ### ****Manipulating WebSocket messages to exploit vulnerabilities****
 
 Khi sử dụng chức năng Live chat để nhắn tin, website sẽ gửi message thông qua WebSocket
 
-![Untitled](wu_media/Untitled%2018.png)
+![Untitled](wu_media/Untitled%2026.png)
 
 Vào WebSocket history để xem lịch sử gửi message
 
 Gửi message vào repeater và sửa thành `{"message":"<img src onerror='alert(1)'>"}` để thực hiện XSS
 
-![Untitled](wu_media/Untitled%2019.png)
+![Untitled](wu_media/Untitled%2027.png)
 
 ---
 
@@ -189,13 +248,13 @@ Gửi message vào repeater và sửa thành `{"message":"<img src onerror='aler
 
 Khi gửi message có chứa code XSS như `{"message":"<img srs='' onerror>"}`, server sẽ phản hồi lại `{"error":"Attack detected: Event handler"}` và block IP của ta.
 
-![Untitled](wu_media/Untitled%2020.png)
+![Untitled](wu_media/Untitled%2028.png)
 
-![Untitled](wu_media/Untitled%2021.png)
+![Untitled](wu_media/Untitled%2029.png)
 
 Ta có thể bypass việc bị block IP bằng cách sử dụng header `X-Forwarded-For`
 
-![Untitled](wu_media/Untitled%2022.png)
+![Untitled](wu_media/Untitled%2030.png)
 
 Sau một vài lần thử, ta được các error như sau:
 
@@ -209,7 +268,7 @@ Từ đó ta craft được payload
 
 `{"message":"<img src='1' onerror ='alert(1)' />"}`
 
-![Untitled](wu_media/Untitled%2023.png)
+![Untitled](wu_media/Untitled%2031.png)
 
 ---
 
@@ -217,11 +276,11 @@ Từ đó ta craft được payload
 
 Nhận thấy khi bắt đầu kết nối với server, browser sẽ gửi message thông qua WebSocket với nội dung `READY` để lấy những cuộc hội thoại cũ.
 
-![Untitled](wu_media/Untitled%2024.png)
+![Untitled](wu_media/Untitled%2032.png)
 
 Nếu xóa cookie khỏi request, server sẽ tạo cuộc hội thoại mới → server dựa vào cookie để xác định nội dung của cuộc hội thoại trước đó
 
-![Untitled](wu_media/Untitled%2025.png)
+![Untitled](wu_media/Untitled%2033.png)
 
 Tuy nhiên, cookie sẽ tự được gửi khi ta bắt đầu khởi tạo WebSocket (do cookie của ta đang là `secure-only` nên cần dùng protocol `wss`). Ngoài ra WebSocket không bị áp dụng `Same Origin Policy`.
 
@@ -239,6 +298,6 @@ Do đó ta có thể dễ dàng viết script để gửi message đến server 
 
 Đọc trong Burp Collab, ta có được tài khoản của user `carlos`
 
-![Untitled](wu_media/Untitled%2026.png)
+![Untitled](wu_media/Untitled%2034.png)
 
 Dùng tài khoản đó để đăng nhập và hoàn thành lab
