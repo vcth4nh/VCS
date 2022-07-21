@@ -1,17 +1,17 @@
 # Web12
 
 ## Table of Contents
-- [SSTI](#ssti)
-    - [****Basic server-side template injection****](#basic-server-side-template-injection)
-    - [****Basic server-side template injection (code context)****](#basic-server-side-template-injection-code-context)
-    - [**Server-side template injection using documentation**](#server-side-template-injection-using-documentation)
-    - [**Server-side template injection in an unknown language with a documented exploit**](#server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
-    - [**Server-side template injection with information disclosure via user-supplied objects**](#server-side-template-injection-with-information-disclosure-via-user-supplied-objects)
-    - [**Server-side template injection in a sandboxed environment**](#server-side-template-injection-in-a-sandboxed-environment)
+- [**SSTI**](#ssti)
+    - [Basic server-side template injection](#basic-server-side-template-injection)
+    - [Basic server-side template injection (code context)](#basic-server-side-template-injection-code-context)
+    - [Server-side template injection using documentation](#server-side-template-injection-using-documentation)
+    - [Server-side template injection in an unknown language with a documented exploit](#server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
+    - [Server-side template injection with information disclosure via user-supplied objects](#server-side-template-injection-with-information-disclosure-via-user-supplied-objects)
+    - [Server-side template injection in a sandboxed environment](#server-side-template-injection-in-a-sandboxed-environment)
 
-# SSTI
+# **SSTI**
 
-### ****Basic server-side template injection****
+### Basic server-side template injection
 
 Nhận thấy một số sản phẩm sau khi bấm xem sẽ hiện thông báo hết hàng, và nội dung thông báo được lấy trên 
 
@@ -41,7 +41,7 @@ Function trả về `true` → File được xóa thành công
 
 ---
 
-### ****Basic server-side template injection (code context)****
+### Basic server-side template injection (code context)
 
 Khi sử dụng chức năng đổi tên hiển thị, có thể thấy website sẽ gửi request đến server param `blog-post-author-display` với value `user.first_name` → khả năng cao server sẽ có một object `user` với field `first_name`, khi hiển thị tên server sẽ dùng code kiểu `{{user.first_name}}`
 
@@ -91,7 +91,7 @@ Lab đã được solve → xóa file thành công
 
 ---
 
-### **Server-side template injection using documentation**
+### Server-side template injection using documentation
 
 Ở phần chỉnh sửa template của bài post, ta có thể thấy template sử dụng `${product.price}`
 
@@ -111,7 +111,7 @@ Tìm được payload thực hiện RCE cho template này
 
 ---
 
-### **Server-side template injection in an unknown language with a documented exploit**
+### Server-side template injection in an unknown language with a documented exploit
 
 Sau một hồi đọc HTML src của website, ta không thể tìm thấy nơi nó handle nội dung của parame `message` → khả năng template ở server side sẽ xử lý cái này
 
@@ -177,7 +177,7 @@ URL encode và gửi payload qua param `message`
 
 ---
 
-### **Server-side template injection with information disclosure via user-supplied objects**
+### Server-side template injection with information disclosure via user-supplied objects
 
 Gửi payload {{7*7}} vào phần sửa template, ta nhận được lỗi như sau
 
@@ -199,13 +199,13 @@ Submit secrete key để hoàn hành lab
 
 ---
 
-### **Server-side template injection in a sandboxed environment**
+### Server-side template injection in a sandboxed environment
 
 Xem Solution
 
 ---
 
-**Server-side template injection with a custom exploit**
+Server-side template injection with a custom exploit
 
 Phát hiện 
 

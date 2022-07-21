@@ -1,19 +1,20 @@
 # Web10
 ## Table of Content
-- [DOM-based vulnerabilities](#dom-based-vulnerabilities)
-    - [****DOM XSS using web messages****](#dom-xss-using-web-messages)
-    - [****DOM XSS using web messages and JSON.parse****](#dom-xss-using-web-messages-andjsonparse)
-    - [****DOM-based open redirection****](#dom-based-open-redirection)
-    - [****DOM-based cookie manipulation****](#dom-based-cookie-manipulation)
-    - [****Exploiting DOM clobbering to enable XSS****](#exploiting-dom-clobbering-to-enable-xss)
-    - [****Clobbering DOM attributes to bypass HTML filters****](#clobbering-dom-attributes-to-bypass-html-filters)
-- [WebSocket](#websocket)
-    - [****Manipulating WebSocket messages to exploit vulnerabilities****](#manipulating-websocket-messages-to-exploit-vulnerabilities)
-    - [**Manipulating the WebSocket handshake to exploit vulnerabilities**](#manipulating-the-websocket-handshake-to-exploit-vulnerabilities)
-    - [**Cross-site WebSocket hijacking**](#cross-site-websocket-hijacking)
-# DOM-based vulnerabilities
+- [**DOM-based vulnerabilities**](#dom-based-vulnerabilities)
+    - [DOM XSS using web messages](#dom-xss-using-web-messages)
+    - [DOM XSS using web messages and a JavaScript URL](#dom-xss-using-web-messages-and-a-javascript-url)
+    - [DOM XSS using web messages and JSON.parse](#dom-xss-using-web-messages-andjsonparse)
+    - [DOM-based open redirection](#dom-based-open-redirection)
+    - [DOM-based cookie manipulation](#dom-based-cookie-manipulation)
+    - [Exploiting DOM clobbering to enable XSS](#exploiting-dom-clobbering-to-enable-xss)
+    - [Clobbering DOM attributes to bypass HTML filters](#clobbering-dom-attributes-to-bypass-html-filters)
+- [**WebSocket**](#websocket)
+    - [Manipulating WebSocket messages to exploit vulnerabilities](#manipulating-websocket-messages-to-exploit-vulnerabilities)
+    - [Manipulating the WebSocket handshake to exploit vulnerabilities](#manipulating-the-websocket-handshake-to-exploit-vulnerabilities)
+    - [Cross-site WebSocket hijacking](#cross-site-websocket-hijacking)
+# **DOM-based vulnerabilities**
 
-### ****DOM XSS using web messages****
+### DOM XSS using web messages
 
 Nhận thấy website lấy data từ `message event` để gán trực tiếp vào object `ads`
 
@@ -33,7 +34,7 @@ Copy paste và store vào Exploit server rồi gửi cho victim để hoàn thà
 
 ---
 
-**DOM XSS using web messages and a JavaScript URL**
+### DOM XSS using web messages and a JavaScript URL
 
 Nhận thấy website lấy url từ `message event`, check xem có `http:` hoặc `https:` trong đó không và redirect
 
@@ -53,7 +54,7 @@ Copy paste và store vào Exploit server rồi gửi cho victim để hoàn thà
 
 ---
 
-### ****DOM XSS using web messages and JSON.parse****
+### DOM XSS using web messages and JSON.parse
 
 Website sẽ parse `JSON` từ `event message`. Có thể thấy khi `JSON` có `type: load-channel`, script sẽ để đổi `src` của `iframe` thành `url` ta cung cấp trong `JSON`.
 
@@ -89,7 +90,7 @@ Copy paste và store vào Exploit server rồi gửi cho victim để hoàn thà
 
 ---
 
-### ****DOM-based open redirection****
+### DOM-based open redirection
 
 Khi bấm nút Back to Blog, website sẽ kiểm tra URL hiện tại có phần `/url=(https?:\/\/.+)/` không, nếu có thì sẽ redirect ta về link sau `url=`.
 
@@ -103,7 +104,7 @@ Lab sẽ tự động solve sau khi ta truy cập link vừa craft được
 
 ---
 
-### ****DOM-based cookie manipulation****
+### DOM-based cookie manipulation
 
 Khi ta xem một sản phẩm, website sẽ tạo cookie với giá trị là link của sản phẩm đó
 
@@ -149,7 +150,7 @@ Copy paste và store vào Exploit server rồi gửi cho victim để hoàn thà
 
 ---
 
-### ****Exploiting DOM clobbering to enable XSS****
+### Exploiting DOM clobbering to enable XSS
 
 Ta thấy trong hàm `loadComments()` có đoạn code
 
@@ -180,7 +181,7 @@ Nhập đoạn mã trên vào phần comment và gửi, sau đó gửi thêm m�
 
 ---
 
-### ****Clobbering DOM attributes to bypass HTML filters****
+### Clobbering DOM attributes to bypass HTML filters
 
 Có thể thấy các bình luận của ta không được escape ở server-side → client-side sẽ có script để xử lý XSS
 
@@ -228,9 +229,9 @@ Vào Exploit server, tạo `iframe` và set onload delay nửa giây để comme
 
 Gửi cho victim để hoàn thành lab
 
-# WebSocket
+# **WebSocket**
 
-### ****Manipulating WebSocket messages to exploit vulnerabilities****
+### Manipulating WebSocket messages to exploit vulnerabilities
 
 Khi sử dụng chức năng Live chat để nhắn tin, website sẽ gửi message thông qua WebSocket
 
@@ -244,7 +245,7 @@ Gửi message vào repeater và sửa thành `{"message":"<img src onerror='aler
 
 ---
 
-### **Manipulating the WebSocket handshake to exploit vulnerabilities**
+### Manipulating the WebSocket handshake to exploit vulnerabilities
 
 Khi gửi message có chứa code XSS như `{"message":"<img srs='' onerror>"}`, server sẽ phản hồi lại `{"error":"Attack detected: Event handler"}` và block IP của ta.
 
@@ -272,7 +273,7 @@ Từ đó ta craft được payload
 
 ---
 
-### **Cross-site WebSocket hijacking**
+### Cross-site WebSocket hijacking
 
 Nhận thấy khi bắt đầu kết nối với server, browser sẽ gửi message thông qua WebSocket với nội dung `READY` để lấy những cuộc hội thoại cũ.
 
