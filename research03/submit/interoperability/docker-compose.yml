@@ -1,0 +1,15 @@
+version: "2"
+services:
+  main:
+    build: ./main
+    command: python3 app.py
+    ports:
+      - "1337:1337"
+    environment:
+      - VERIFY=verify
+    restart: unless-stopped
+
+  verify:
+    build: ./verify
+    command: python2 app.py
+    restart: unless-stopped
