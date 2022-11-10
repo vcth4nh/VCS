@@ -1,0 +1,3 @@
+1. Sử dụng waf để chặn kết nối từ bên ngoài đến các endpoint nguy hiểm
+2. Xóa các file war không sử dụng đến
+3. Nếu thực sự cần truy cập các endpoint đó từ bên ngoài thì sử dụng các filter
